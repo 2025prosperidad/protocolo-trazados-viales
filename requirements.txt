@@ -1,0 +1,2 @@
+# No se requieren dependencias adicionales para este sitio estático
+# Python 3.8+ viene con http.server incluido

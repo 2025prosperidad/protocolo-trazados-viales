@@ -1,29 +1,25 @@
 {
-    "name": "protocolo-trazados-viales",
-    "version": "1.0.0",
-    "description": "Documentación web del Protocolo de Trazados Viales - GADPP",
-    "main": "index.html",
-    "scripts": {
-        "start": "python3 -m http.server 8000",
-        "build": "echo 'No build step required for static site'",
-        "dev": "python3 -m http.server 8000"
-    },
-    "keywords": [
-        "documentacion",
-        "trazados-viales",
-        "gadpp",
-        "plantuml",
-        "protocolo"
-    ],
-    "author": "Infinity Solutions RII Cia. Ltda.",
-    "license": "Proprietary",
-    "engines": {
-        "node": ">=14.0.0",
-        "python": ">=3.8.0"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/tu-usuario/protocolo-trazados-viales.git"
-    },
-    "homepage": "https://protocolo-trazados-viales.onrender.com"
+  "name": "protocolo-trazados-viales",
+  "version": "1.0.0",
+  "description": "Documentación web del Protocolo de Trazados Viales - GADPP",
+  "scripts": {
+    "start": "python3 -m http.server $PORT"
+  },
+  "keywords": [
+    "documentacion",
+    "trazados-viales",
+    "gadpp",
+    "plantuml",
+    "protocolo"
+  ],
+  "author": "Infinity Solutions RII Cia. Ltda.",
+  "license": "MIT",
+  "engines": {
+    "python": ">=3.8.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/2025prosperidad/protocolo-trazados-viales.git"
+  },
+  "homepage": "https://protocolo-trazados-viales.onrender.com"
 }
