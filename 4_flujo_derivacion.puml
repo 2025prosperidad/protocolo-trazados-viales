@@ -1,0 +1,146 @@
+@startuml
+title Flujo de Derivación de Trámites
+
+participant "Herramienta" as Herramienta
+actor "Técnico" as Tecnico
+actor "Derivación" as Derivacion
+actor "Supervisor" as Supervisor
+actor "Ciudadano" as Ciudadano
+database "Expediente Digital" as BD
+
+== INICIO: DETECCIÓN DE NECESIDAD DE DERIVACIÓN ==
+
+Tecnico -> Tecnico : Analizar trámite en fase actual
+note right of Tecnico
+  El técnico identifica que necesita:
+  - Validación de entidad externa
+  - Informe de otra institución
+  - Autorización específica
+  - Documento complementario
+end note
+
+Tecnico -> Herramienta : Solicitar derivación
+note over Herramienta
+  El técnico especifica:
+  - Motivo de la derivación
+  - Entidad o actor de derivación
+  - Documento o información requerida
+  - Observaciones adicionales
+end note
+
+== CAMBIO DE ESTADO Y NOTIFICACIONES ==
+
+Herramienta -> BD : Cambiar estado del trámite a "En Derivación"
+note right of BD
+  Se registra:
+  - Timestamp de derivación
+  - Fase desde la que se deriva
+  - Motivo de derivación
+  - Pausa del contador de tiempo
+end note
+
+Herramienta -> Derivacion : Enviar trámite a derivación
+note right of Derivacion
+  El actor de Derivación recibe:
+  - Expediente digital completo
+  - Solicitud específica
+  - Información de contacto
+  - Plazo sugerido de respuesta
+end note
+
+Herramienta -> Supervisor : Notificar derivación del trámite
+note right of Supervisor
+  El supervisor visualiza:
+  - Trámite en estado "Derivación"
+  - Técnico que solicitó
+  - Actor de derivación asignado
+  - Tiempo transcurrido
+end note
+
+Herramienta -> Ciudadano : Notificar pausa temporal del trámite
+note right of Ciudadano
+  El ciudadano recibe:
+  - Notificación de derivación
+  - Motivo de la pausa
+  - Entidad responsable
+  - Estimación de tiempo
+end note
+
+== GESTIÓN EN DERIVACIÓN ==
+
+note over Derivacion
+  El trámite permanece en el actor de
+  Derivación hasta que este responda y
+  complete su gestión.
+  
+  Durante este tiempo:
+  - El contador de tiempo está pausado
+  - El técnico original no puede avanzar
+  - El supervisor monitorea el estado
+end note
+
+Derivacion -> Derivacion : Procesar y gestionar el trámite derivado
+note right of Derivacion
+  Actividades de derivación:
+  - Revisión de documentación
+  - Elaboración de informe/validación
+  - Gestión con entidad externa
+  - Obtención de autorizaciones
+  - Carga de documentos respuesta
+end note
+
+== RESPUESTA Y REACTIVACIÓN ==
+
+Derivacion -> Herramienta : Responder y devolver trámite procesado
+note over Herramienta
+  La respuesta incluye:
+  - Documento/informe solicitado
+  - Validaciones obtenidas
+  - Observaciones y recomendaciones
+  - Fecha de respuesta
+end note
+
+Herramienta -> BD : Cambiar estado a "En Proceso"
+note right of BD
+  Se registra:
+  - Timestamp de reactivación
+  - Tiempo en derivación
+  - Documentos recibidos
+  - Reanudación del contador
+end note
+
+Herramienta -> Tecnico : Notificar continuación después de derivación
+note right of Tecnico
+  El técnico recibe:
+  - Notificación de reactivación
+  - Documentos de la derivación
+  - Expediente actualizado
+  - Tiempo restante de gestión
+end note
+
+Herramienta -> Supervisor : Actualizar seguimiento post-derivación
+note right of Supervisor
+  Actualización incluye:
+  - Estado: "En Proceso"
+  - Tiempo total en derivación
+  - Nuevo plazo ajustado
+  - Documentos incorporados
+end note
+
+Herramienta -> Ciudadano : Notificar reactivación del trámite
+note right of Ciudadano
+  El ciudadano recibe:
+  - Notificación de reactivación
+  - Actualización de estado
+  - Continuación del proceso
+end note
+
+Tecnico -> Herramienta : Continuar con la gestión de la fase
+note over Tecnico
+  El técnico retoma la gestión
+  con la información recibida
+  de la derivación
+end note
+
+@enduml
+

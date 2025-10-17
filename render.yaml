@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: protocolo-trazados-viales
+    env: static
+    buildCommand: echo "No build required for static site"
+    startCommand: python3 -m http.server $PORT
+    envVars:
+      - key: PORT
+        value: 10000
+    staticPublishPath: .
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=3600
+      - path: /*.css
+        name: Cache-Control
+        value: public, max-age=86400
+      - path: /*.js
+        name: Cache-Control
+        value: public, max-age=86400
+      - path: /*.puml
+        name: Cache-Control
+        value: public, max-age=3600

@@ -1,0 +1,128 @@
+@startuml
+title Flujo de Revisión de Fases de Trámite
+
+participant "Herramienta" as Herramienta
+participant "Motor de Asignación" as Motor
+participant "Grupo de Fase" as GrupoFase
+actor "Supervisor" as Supervisor
+actor "Técnico" as Tecnico
+actor "Ciudadano" as Ciudadano
+database "Expediente Digital" as BD
+
+== CICLO DE GESTIÓN DE FASES ==
+
+note over Herramienta
+  El trámite recorre múltiples fases secuenciales
+  según el tipo de trámite (Trazado Vial, 
+  Certificación Vial, Replanteo, etc.)
+end note
+
+loop Por cada fase del trámite
+  
+  == INICIO DE FASE ==
+  Tecnico -> Herramienta : Acceder a la fase asignada
+  Herramienta -> Tecnico : Mostrar información del trámite
+  note right of Tecnico
+    El técnico visualiza:
+    - Datos del solicitante
+    - Documentación disponible
+    - Informes de fases anteriores
+    - Requisitos de la fase actual
+  end note
+  
+  Tecnico -> Herramienta : Iniciar trabajo de la fase asignada
+  Herramienta -> Supervisor : Actualizar seguimiento del trámite
+  note right of Supervisor
+    El supervisor monitorea:
+    - Estado de la fase
+    - Tiempo transcurrido
+    - Próximos vencimientos
+  end note
+  
+  == GESTIÓN DE LA FASE ==
+  Tecnico -> Tecnico : Realizar análisis técnico
+  note right of Tecnico
+    Actividades según fase:
+    - Análisis de competencia
+    - Informe de pertinencia
+    - Levantamiento topográfico
+    - Diseño geométrico
+    - Elaboración de resolución
+  end note
+  
+  == FINALIZACIÓN DE FASE ==
+  Tecnico -> Herramienta : Finalizar fase y cargar entregables
+  note over Herramienta
+    El técnico carga:
+    - Informe técnico
+    - Planos (si aplica)
+    - Memorias de cálculo
+    - Documentos de respaldo
+  end note
+  
+  Herramienta -> Supervisor : Actualizar seguimiento de la fase
+  Herramienta -> BD : Registrar finalización de fase
+  note right of BD
+    Se registra:
+    - Timestamp de finalización
+    - Documentos generados
+    - Técnico responsable
+    - Tiempo utilizado
+  end note
+  
+  == TRANSICIÓN A SIGUIENTE FASE ==
+  Herramienta -> Motor : Evaluar y asignar siguiente fase automáticamente
+  note over Motor
+    El motor identifica:
+    - Siguiente fase en el flujo
+    - Perfil técnico requerido
+    - Grupo correspondiente
+  end note
+  
+  Motor -> GrupoFase : Seleccionar grupo/miembro disponible para siguiente fase
+  GrupoFase -> Motor : Devolver técnico seleccionado
+  Motor -> Herramienta : Confirmar nueva asignación
+  
+  == NOTIFICACIONES DE AVANCE ==
+  Herramienta -> Tecnico : Notificar nueva fase asignada
+  note right of Tecnico
+    El nuevo técnico recibe:
+    - Notificación de asignación
+    - Acceso al expediente
+    - Plazo de gestión
+  end note
+  
+  Herramienta -> Ciudadano : Notificar avance del trámite
+  note right of Ciudadano
+    El ciudadano recibe:
+    - Actualización de estado
+    - Fase actual
+    - Avance porcentual
+  end note
+  
+  Herramienta -> Supervisor : Actualizar seguimiento con nueva fase
+  
+end
+
+note over Herramienta
+  El loop continúa hasta que todas las
+  fases del trámite estén completadas.
+  
+  Ejemplos de secuencias de fases:
+  
+  Trazado Vial:
+  1. Informe de Competencia
+  2. Informe de Pertinencia
+  3. Informe de Topografía
+  4. Informe de Diseño Geométrico
+  5. Informe de Trazado Vial
+  6. Resolución y Oficio
+  
+  Certificación Vial:
+  1. Informe de Competencia
+  2. Verificación de Aprobación
+  3. Informe de Certificación
+end note
+
+@enduml
+

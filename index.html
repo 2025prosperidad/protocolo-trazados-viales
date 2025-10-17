@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo Trazados Viales - GADPP</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <h1>📐 Protocolo Trazados Viales</h1>
+                <span class="subtitle">GADPP - Documentación Técnica</span>
+            </div>
+            <div class="header-actions">
+                <button class="btn-theme" id="themeToggle" aria-label="Cambiar tema">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="btn-menu" id="menuToggle" aria-label="Menú">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Buscar en el documento..." />
+            </div>
+
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="#inicio" class="nav-link active">Inicio</a></li>
+                    <li><a href="#registro" class="nav-link">1. Registro del Documento</a></li>
+                    <li><a href="#introduccion" class="nav-link">2. Introducción y Antecedentes</a></li>
+                    <li><a href="#objetivo" class="nav-link">3. Objetivo</a></li>
+                    <li><a href="#modelado" class="nav-link">4. Modelado del Sistema (UML)</a></li>
+                    <li><a href="#contexto" class="nav-link">5. Contexto Operativo</a></li>
+                    <li>
+                        <a href="#gestion-tramites" class="nav-link">6. Gestión de Trámites</a>
+                        <ul class="sub-menu">
+                            <li><a href="#capacidades" class="nav-link">6.1 Capacidades del Módulo</a></li>
+                            <li><a href="#actores" class="nav-link">6.2 Actores del Módulo</a></li>
+                            <li><a href="#flujos" class="nav-link">6.6 Flujos de Proceso</a>
+                                <ul class="sub-menu">
+                                    <li><a href="#flujo-general" class="nav-link">6.6.1 Flujo General</a></li>
+                                    <li><a href="#flujo-ingreso" class="nav-link">6.6.2 Flujo de Ingreso</a></li>
+                                    <li><a href="#flujo-fases" class="nav-link">6.6.3 Flujo de Fases</a></li>
+                                    <li><a href="#flujo-derivacion" class="nav-link">6.6.4 Flujo de Derivación</a></li>
+                                    <li><a href="#flujo-solicitud" class="nav-link">6.6.5 Solicitud de Información</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="#diseno-trazado" class="nav-link">7. Módulo de Diseño</a></li>
+                    <li><a href="#reportes" class="nav-link">8. Módulo de Reportes</a></li>
+                    <li><a href="#arquitectura" class="nav-link">9. Arquitectura</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Inicio -->
+            <section id="inicio" class="section">
+                <div class="hero">
+                    <h1 class="title-main">DOCUMENTACIÓN TÉCNICA Y FUNCIONAL</h1>
+                    <h2 class="title-sub">PLATAFORMA DE TRAZADOS VIALES</h2>
+                    <div class="info-cards">
+                        <div class="info-card">
+                            <h3>Cliente</h3>
+                            <p>Gobierno Autónomo Descentralizado de la Provincia de Pichincha (GADPP)</p>
+                        </div>
+                        <div class="info-card">
+                            <h3>Proyecto</h3>
+                            <p>Consultoría del Servicio Técnico Especializado para la Gestión de Trámites de Trazados
+                                Viales</p>
+                        </div>
+                        <div class="info-card">
+                            <h3>Versión</h3>
+                            <p>V 2.0 - Octubre 2025</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1. Registro del Documento -->
+            <section id="registro" class="section">
+                <h2 class="section-title">1. REGISTRO DEL DOCUMENTO</h2>
+
+                <h3>1.1 Datos Generales</h3>
+                <table class="data-table">
+                    <tr>
+                        <td class="label">CLIENTE</td>
+                        <td>GOBIERNO AUTÓNOMO DESCENTRALIZADO DE LA PROVINCIA DE PICHINCHA (GADPP)</td>
+                    </tr>
+                    <tr>
+                        <td class="label">PROYECTO</td>
+                        <td>Consultoría del Servicio Técnico Especializado para la Gestión de Trámites de Trazados
+                            Viales y Derivados</td>
+                    </tr>
+                    <tr>
+                        <td class="label">CÓDIGO DE CONTRATO</td>
+                        <td>N° 139-DCP-2025</td>
+                    </tr>
+                    <tr>
+                        <td class="label">DOCUMENTO</td>
+                        <td>Manual Técnico y Funcional de la Plataforma de Trazados Viales</td>
+                    </tr>
+                    <tr>
+                        <td class="label">FECHA DE EMISIÓN</td>
+                        <td>14 de octubre de 2025</td>
+                    </tr>
+                </table>
+
+                <h3>1.2 Control de Versiones</h3>
+                <table class="version-table">
+                    <thead>
+                        <tr>
+                            <th>Versión</th>
+                            <th>Fecha</th>
+                            <th>Elaboró</th>
+                            <th>Descripción del Cambio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>V 1.0</td>
+                            <td>14-10-2025</td>
+                            <td>Infinity Solutions RII Cia. Ltda.</td>
+                            <td>Versión inicial del documento técnico.</td>
+                        </tr>
+                        <tr>
+                            <td>V 2.0</td>
+                            <td>14-10-2025</td>
+                            <td>Infinity Solutions RII Cia. Ltda.</td>
+                            <td>Actualización completa con arquitectura AppSheet y Google Cloud.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 2. Introducción -->
+            <section id="introduccion" class="section">
+                <h2 class="section-title">2. INTRODUCCIÓN Y ANTECEDENTES</h2>
+                <p class="text-content">
+                    La Plataforma de Trazados Viales es una solución de software desarrollada en el marco del contrato
+                    N° 139-DCP-2025 para el Gobierno Autónomo Descentralizado de la Provincia de Pichincha. El sistema
+                    fue concebido para modernizar, automatizar y estandarizar la gestión de los trámites de vialidad,
+                    centralizando la información y optimizando los flujos de trabajo del equipo técnico de la Dirección
+                    de Vialidad.
+                </p>
+                <p class="text-content">
+                    El diseño funcional de la aplicación se fundamenta en el análisis de los procesos operativos
+                    existentes, los cuales fueron formalizados y validados en la sesión de trabajo del 11 de septiembre
+                    de 2025, documentada en el "ACTA DE REUNIÓN N° 1 - CPV - GADPP - 2025". Dicha acta ha sido el pilar
+                    para la traducción de la lógica de negocio a las funcionalidades que se describen en este manual.
+                </p>
+            </section>
+
+            <!-- 3. Objetivo -->
+            <section id="objetivo" class="section">
+                <h2 class="section-title">3. OBJETIVO DE LA DOCUMENTACIÓN</h2>
+                <p class="text-content">
+                    El presente documento tiene como objetivo describir en detalle la arquitectura, funcionalidades y
+                    flujos de operación de la Plataforma de Trazados Viales. Este manual técnico sirve como una
+                    referencia consolidada para el entendimiento del sistema implementado, detallando la lógica de
+                    negocio, la estructura de los módulos y los componentes tecnológicos que conforman la solución.
+                </p>
+                <div class="callout callout-info">
+                    <strong>📌 Dirigido a:</strong>
+                    <ul>
+                        <li>Usuarios técnicos y administradores del sistema</li>
+                        <li>Personal de gestión</li>
+                        <li>Equipo de desarrollo y mantenimiento</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 4. Modelado UML -->
+            <section id="modelado" class="section">
+                <h2 class="section-title">4. MODELADO DEL SISTEMA (UML)</h2>
+                <p class="text-content">
+                    Para facilitar la comprensión de la estructura y el comportamiento de la plataforma, esta
+                    documentación utiliza el Lenguaje Unificado de Modelado (UML) como estándar para la representación
+                    gráfica.
+                </p>
+                <div class="diagram-types">
+                    <div class="diagram-type">
+                        <h4>📊 Diagramas de Casos de Uso</h4>
+                        <p>Representan las funcionalidades clave del sistema y cómo los diferentes tipos de usuarios
+                            interactúan con ellas.</p>
+                    </div>
+                    <div class="diagram-type">
+                        <h4>🔄 Diagramas de Secuencia</h4>
+                        <p>Describen el flujo cronológico de mensajes e interacciones entre los componentes del sistema.
+                        </p>
+                    </div>
+                    <div class="diagram-type">
+                        <h4>🗂️ Diagramas de Clases</h4>
+                        <p>Definen el modelo estático de datos, mostrando las principales entidades del sistema y sus
+                            relaciones.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Contexto Operativo -->
+            <section id="contexto" class="section">
+                <h2 class="section-title">5. CONTEXTO OPERATIVO</h2>
+                <p class="text-content">
+                    La plataforma fue diseñada con base en el levantamiento de procesos documentado en el Acta de
+                    Reunión N° 1. Dicha acta estableció el marco de trabajo, los tipos de trámites a gestionar, sus
+                    fases secuenciales, los requisitos documentales por trámite y los perfiles técnicos responsables de
+                    cada etapa del proceso.
+                </p>
+            </section>
+
+            <!-- 6. Gestión de Trámites -->
+            <section id="gestion-tramites" class="section">
+                <h2 class="section-title">6. DESCRIPCIÓN FUNCIONAL: MÓDULO DE GESTIÓN DE TRÁMITES</h2>
+                <p class="text-content">
+                    Este módulo es el núcleo operativo de la plataforma, orquestando y automatizando el ciclo de vida
+                    completo de los trámites de vialidad.
+                </p>
+
+                <div id="capacidades" class="subsection">
+                    <h3>6.1 Capacidades del Módulo</h3>
+                    <p class="text-content">El sistema gestiona el flujo de trabajo de los siguientes trámites:</p>
+                    <ul class="feature-list">
+                        <li>🛣️ Trazado Vial</li>
+                        <li>📋 Certificación Vial</li>
+                        <li>📍 Replanteo Vial</li>
+                        <li>📏 Sección Transversal Proyectada (Exclusivo para GADS)</li>
+                        <li>🎯 Colocación Eje Vial</li>
+                        <li>🏗️ Colocación de Infraestructura</li>
+                        <li>🚧 Declaratoria de Camino Público</li>
+                    </ul>
+
+                    <div class="capabilities-grid">
+                        <div class="capability-card">
+                            <h4>🌐 Portal Público</h4>
+                            <p>Los ciudadanos pueden iniciar trámites en línea, adjuntando la documentación requerida de
+                                forma digital.</p>
+                        </div>
+                        <div class="capability-card">
+                            <h4>⚙️ Motor de Asignación</h4>
+                            <p>Asigna automáticamente cada fase del trámite al perfil técnico competente mediante
+                                algoritmo Round-Robin.</p>
+                        </div>
+                        <div class="capability-card">
+                            <h4>📬 Notificaciones</h4>
+                            <p>Envía notificaciones automáticas vía correo electrónico y WhatsApp a todos los actores
+                                involucrados.</p>
+                        </div>
+                        <div class="capability-card">
+                            <h4>📄 Documentos</h4>
+                            <p>Genera documentos de salida (informes, certificaciones, resoluciones) en formato PDF.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="actores" class="subsection">
+                    <h3>6.2 Actores del Módulo</h3>
+                    <div class="actors-grid">
+                        <div class="actor-card">
+                            <div class="actor-icon">👤</div>
+                            <h4>Ciudadano/Solicitante</h4>
+                            <p>Actor externo que interactúa con el sistema a través del portal público para la gestión
+                                de sus trámites.</p>
+                        </div>
+                        <div class="actor-card">
+                            <div class="actor-icon">👨‍💼</div>
+                            <h4>Técnico (Usuario Interno)</h4>
+                            <p>Profesional especializado (Ingeniero, Arquitecto, Topógrafo) que ejecuta las fases
+                                técnicas de los trámites asignados.</p>
+                        </div>
+                        <div class="actor-card">
+                            <div class="actor-icon">👨‍💻</div>
+                            <h4>Supervisor</h4>
+                            <p>Coordinador con permisos para monitorear el estado de todos los trámites, reasignar
+                                tareas y generar reportes de gestión.</p>
+                        </div>
+                        <div class="actor-card">
+                            <div class="actor-icon">🏢</div>
+                            <h4>Ventanilla (Analista)</h4>
+                            <p>Personal que recibe y valida la documentación de los ciudadanos y registra los trámites
+                                en el sistema.</p>
+                        </div>
+                        <div class="actor-card">
+                            <div class="actor-icon">🔄</div>
+                            <h4>Derivación</h4>
+                            <p>Actor que gestiona trámites que requieren validación o documentación de entidades
+                                externas.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flujos de Proceso -->
+                <div id="flujos" class="subsection">
+                    <h3>6.6 Flujos de Proceso Detallados</h3>
+
+                    <!-- 6.6.1 Flujo General -->
+                    <div id="flujo-general" class="flow-section">
+                        <h4>6.6.1 Flujo General del Módulo de Trazados Viales</h4>
+                        <p class="text-content">
+                            El flujo de proceso general del módulo está diseñado para guiar un trámite desde su
+                            solicitud inicial hasta su resolución final de manera estructurada y auditable. El proceso
+                            se fundamenta en un motor de asignación automática simétrica (Round-Robin) y en un ciclo de
+                            gestión de fases secuenciales.
+                        </p>
+
+                        <div class="diagram-container">
+                            <div class="diagram-header">
+                                <h5>📊 Diagrama: Flujo General del Módulo</h5>
+                                <button class="btn-expand" onclick="expandDiagram('diagram-flujo-general')">Ver
+                                    Diagrama</button>
+                            </div>
+                            <div id="diagram-flujo-general" class="diagram-content hidden">
+                                <div class="loading-diagram"
+                                    style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+                                    <p>Cargando diagrama PlantUML...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="process-steps">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h5>Registro de Trámite</h5>
+                                    <p>El ciudadano entrega la información en Ventanilla. El analista valida requisitos
+                                        y registra el trámite en el sistema, generando un número de expediente único.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h5>Asignación Automática</h5>
+                                    <p>El Motor de Asignación aplica lógica Round-Robin para asignar equitativamente el
+                                        trámite al siguiente técnico disponible del perfil requerido.</p>
+                                </div>
+                            </div>
+
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h5>Notificaciones del Sistema</h5>
+                                    <p>Se notifica automáticamente al Supervisor, Técnico asignado y Ciudadano mediante
+                                        correo electrónico y WhatsApp.</p>
+                                </div>
+                            </div>
+
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h5>Gestión de Fases</h5>
+                                    <p>El trámite atraviesa múltiples fases secuenciales. El Supervisor monitorea el
+                                        progreso. Pueden activarse flujos especiales de Solicitud de Información o
+                                        Derivación.</p>
+                                </div>
+                            </div>
+
+                            <div class="step">
+                                <div class="step-number">5</div>
+                                <div class="step-content">
+                                    <h5>Transición Automática</h5>
+                                    <p>Al finalizar una fase, el sistema asigna automáticamente la siguiente fase al
+                                        técnico correspondiente, notifica a todos los actores y actualiza el expediente.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="step">
+                                <div class="step-number">6</div>
+                                <div class="step-content">
+                                    <h5>Cierre del Trámite</h5>
+                                    <p>Al completar todas las fases, se consolida el expediente digital y se notifica al
+                                        ciudadano, al técnico final y a todos los técnicos que participaron.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Aquí continuarían los demás flujos -->
+                    <div id="flujo-ingreso" class="flow-section">
+                        <h4>6.6.2 Flujo de Ingreso de Información y Registro</h4>
+                        <p class="text-content">
+                            Este flujo describe el proceso completo desde que el ciudadano entrega su solicitud hasta
+                            que el trámite es asignado automáticamente a un técnico y queda listo para su gestión.
+                        </p>
+                        <div class="callout callout-success">
+                            <strong>✅ Proceso garantiza:</strong>
+                            <ul>
+                                <li>Trazabilidad completa de la información</li>
+                                <li>Asignación equitativa de carga de trabajo</li>
+                                <li>Notificaciones a todos los actores</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div id="flujo-fases" class="flow-section">
+                        <h4>6.6.3 Flujo de Revisión de Fases de Trámite</h4>
+                        <p class="text-content">
+                            El núcleo del flujo de trabajo se fundamenta en la gestión secuencial de fases que conforman
+                            el ciclo de vida de cada trámite.
+                        </p>
+
+                        <h5>Secuencia de Fases por Tipo de Trámite:</h5>
+                        <div class="tramites-grid">
+                            <div class="tramite-card">
+                                <h5>🛣️ Trazado Vial</h5>
+                                <ol>
+                                    <li>Informe de Competencia (Ing. Geógrafo)</li>
+                                    <li>Informe de Pertinencia (Arquitecto)</li>
+                                    <li>Informe de Topografía (Topógrafo)</li>
+                                    <li>Diseño Geométrico (Ing. Civil)</li>
+                                    <li>Informe de Trazado Vial (Ing. Civil)</li>
+                                    <li>Resolución y Oficio (Ing. Civil)</li>
+                                </ol>
+                            </div>
+
+                            <div class="tramite-card">
+                                <h5>📋 Certificación Vial</h5>
+                                <ol>
+                                    <li>Informe de Competencia (Ing. Civil)</li>
+                                    <li>Verificación de Aprobación (Ing. Civil)</li>
+                                    <li>Informe de Certificación (Ing. Geógrafo)</li>
+                                </ol>
+                            </div>
+
+                            <div class="tramite-card">
+                                <h5>📍 Replanteo Vial</h5>
+                                <ol>
+                                    <li>Informe de Competencia (Arquitecto)</li>
+                                    <li>Verificación de Aprobación (Arquitecto)</li>
+                                    <li>Inspección (si aplica) (Arquitecto)</li>
+                                    <li>Informe de Replanteo (Ing. Geógrafo)</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="flujo-derivacion" class="flow-section">
+                        <h4>6.6.4 Flujo de Derivación de Trámites</h4>
+                        <p class="text-content">
+                            Este flujo se activa cuando el técnico determina que necesita un documento, validación o
+                            informe de una entidad externa.
+                        </p>
+                        <div class="callout callout-warning">
+                            <strong>⏸️ Durante la derivación:</strong>
+                            <ul>
+                                <li>El contador de tiempo se pausa automáticamente</li>
+                                <li>El trámite pasa al actor de Derivación</li>
+                                <li>El Supervisor monitorea el estado</li>
+                                <li>Se notifica al ciudadano sobre la pausa</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div id="flujo-solicitud" class="flow-section">
+                        <h4>6.6.5 Flujo de Solicitud de Información al Usuario</h4>
+                        <p class="text-content">
+                            Este proceso se inicia cuando el técnico detecta que la documentación proporcionada por el
+                            ciudadano es insuficiente o incorrecta.
+                        </p>
+                        <div class="info-box">
+                            <h5>📤 Canales de entrega de información:</h5>
+                            <ul>
+                                <li><strong>Presencial:</strong> El ciudadano entrega en Ventanilla y el analista
+                                    registra</li>
+                                <li><strong>Digital:</strong> El ciudadano carga documentos en el portal web</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. Módulo de Diseño -->
+            <section id="diseno-trazado" class="section">
+                <h2 class="section-title">7. DESCRIPCIÓN FUNCIONAL: MÓDULO DE DISEÑO Y TRAZADO</h2>
+                <p class="text-content">
+                    Este módulo provee un conjunto de herramientas geoespaciales para el diseño, análisis y
+                    visualización de trazados viales.
+                </p>
+                <div class="features-grid">
+                    <div class="feature">
+                        <h4>🗺️ Visor Cartográfico</h4>
+                        <p>Renderiza capas de información geoespacial 2D/3D para contextualizar proyectos.</p>
+                    </div>
+                    <div class="feature">
+                        <h4>📥 Importación de Datos</h4>
+                        <p>Permite importar levantamientos topográficos en formatos DWG, SHP y KML.</p>
+                    </div>
+                    <div class="feature">
+                        <h4>🎨 Diseño Geométrico</h4>
+                        <p>Herramientas para trazado de ejes viales y cálculo paramétrico de curvas.</p>
+                    </div>
+                    <div class="feature">
+                        <h4>✅ Validación Normativa</h4>
+                        <p>Motor de reglas que valida parámetros contra normativa vial vigente.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. Módulo de Reportes -->
+            <section id="reportes" class="section">
+                <h2 class="section-title">8. DESCRIPCIÓN FUNCIONAL: MÓDULO DE REPORTES Y DOCUMENTACIÓN</h2>
+                <p class="text-content">
+                    Este módulo transversal explota los datos generados en la plataforma, proveyendo herramientas para
+                    la generación de informes gerenciales y estadísticas.
+                </p>
+                <ul class="feature-list">
+                    <li>📊 Dashboard de Control con KPIs</li>
+                    <li>📄 Generador de Reportes personalizados en PDF y Excel</li>
+                    <li>📁 Expediente Digital consolidado</li>
+                    <li>🔍 Búsqueda Global avanzada</li>
+                </ul>
+            </section>
+
+            <!-- 9. Arquitectura -->
+            <section id="arquitectura" class="section">
+                <h2 class="section-title">9. ARQUITECTURA DE LA SOLUCIÓN IMPLEMENTADA</h2>
+                <p class="text-content">
+                    La solución se ha desarrollado sobre una arquitectura de tres capas, desacoplada y orientada a
+                    servicios, garantizando escalabilidad, mantenibilidad y seguridad.
+                </p>
+
+                <table class="arch-table">
+                    <thead>
+                        <tr>
+                            <th>Componente</th>
+                            <th>Especificación Técnica</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Arquitectura General</td>
+                            <td>Aplicación Web de tres capas (Presentación, Lógica de Negocio, Datos)</td>
+                        </tr>
+                        <tr>
+                            <td>Sistema Operativo</td>
+                            <td>Linux (Ubuntu Server 22.04 LTS)</td>
+                        </tr>
+                        <tr>
+                            <td>Base de Datos</td>
+                            <td>PostgreSQL 14 con extensión PostGIS</td>
+                        </tr>
+                        <tr>
+                            <td>Backend</td>
+                            <td>Python 3.9+ con framework Django</td>
+                        </tr>
+                        <tr>
+                            <td>Frontend</td>
+                            <td>React 18+</td>
+                        </tr>
+                        <tr>
+                            <td>Servidor Web</td>
+                            <td>Nginx como proxy inverso</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>Gobierno Autónomo Descentralizado de la Provincia de Pichincha</h4>
+                        <p>Dirección de Vialidad</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Desarrollado por</h4>
+                        <p>Infinity Solutions RII Cia. Ltda.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Versión</h4>
+                        <p>V 2.0 - Octubre 2025</p>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <!-- Librería pako para compresión deflate -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+    <script src="plantuml-simple.js"></script>
+</body>
+
+</html>

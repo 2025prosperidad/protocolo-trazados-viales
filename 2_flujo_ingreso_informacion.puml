@@ -1,0 +1,118 @@
+@startuml
+title Flujo de Ingreso de Información y Registro de Trámite
+
+actor "Ciudadano" as Ciudadano
+actor "Ventanilla (Analista)" as Ventanilla
+participant "Herramienta" as Herramienta
+participant "Motor de Asignación" as Motor
+participant "Grupo de Fase" as GrupoFase
+actor "Supervisor" as Supervisor
+actor "Técnico" as Tecnico
+database "Expediente Digital" as BD
+
+== INICIO: RECEPCIÓN DE SOLICITUD ==
+Ciudadano -> Ventanilla : Entrega información y documentación requerida
+note right of Ciudadano
+  El ciudadano puede entregar la información:
+  - Presencialmente en ventanilla
+  - Por medios digitales (portal web)
+end note
+
+Ventanilla -> Ventanilla : Analista revisa y valida requisitos
+note right of Ventanilla
+  Verificación de:
+  - Completitud de documentos
+  - Formato correcto
+  - Información requerida
+end note
+
+== REGISTRO EN EL SISTEMA ==
+Ventanilla -> Herramienta : Registrar Trámite (a través de la herramienta)
+note over Herramienta
+  Formulario de registro incluye:
+  - Datos generales del solicitante
+  - Tipo de trámite
+  - Documentación adjunta
+  - Ubicación geográfica
+end note
+
+Herramienta -> Ventanilla : Mostrar confirmación de creación
+note right of Ventanilla
+  La herramienta confirma el registro con:
+  - Número de expediente único
+  - Tipo de trámite registrado
+  - Fecha y hora de registro
+  - Estado inicial: "Registrado"
+end note
+
+Herramienta -> BD : Crear expediente digital
+note right of BD
+  Se crea el expediente con:
+  - ID único
+  - Metadata del trámite
+  - Documentos iniciales
+  - Timestamp de creación
+end note
+
+== ASIGNACIÓN AUTOMÁTICA DE RESPONSABLE ==
+Herramienta -> Motor : Solicitar asignación de responsable por fase
+note over Motor
+  Lógica de asignación simétrica (Round-Robin):
+  1. Identificar el tipo de trámite y fase actual
+  2. Obtener el perfil técnico requerido
+  3. Localizar el grupo de la fase correspondiente
+  4. Asignar al siguiente técnico en el ciclo
+  5. Verificar disponibilidad
+  6. Mantener contador de rotación
+end note
+
+Motor -> GrupoFase : Solicitar siguiente técnico en rotación según perfil
+note over GrupoFase
+  Grupos por perfil técnico:
+  - Ing. Geógrafo
+  - Arquitecto
+  - Topógrafo
+  - Ing. Civil
+end note
+
+GrupoFase -> Motor : Devolver técnico seleccionado
+Motor -> Herramienta : Asignar trámite al técnico
+
+== NOTIFICACIONES Y ACTIVACIÓN ==
+Herramienta -> BD : Registrar evento de asignación
+Herramienta -> Supervisor : Notificar asignación (vista en panel)
+note right of Supervisor
+  El supervisor visualiza:
+  - Nuevo trámite asignado
+  - Técnico responsable
+  - Fase actual
+  - Tiempo de gestión
+end note
+
+Herramienta -> Tecnico : Enviar notificación (correo + WhatsApp)
+note right of Tecnico
+  Notificación incluye:
+  - Número de trámite
+  - Tipo de trámite
+  - Fase asignada
+  - Fecha de vencimiento
+  - Enlace al expediente
+end note
+
+Herramienta -> Ciudadano : Enviar confirmación (correo + WhatsApp)
+note right of Ciudadano
+  Confirmación incluye:
+  - Número de expediente
+  - Estado: "En proceso"
+  - Técnico asignado
+  - Tiempo estimado
+end note
+
+Tecnico -> Herramienta : Acceder al expediente y comenzar gestión
+note over Tecnico
+  El técnico inicia la gestión
+  de la primera fase del trámite
+end note
+
+@enduml
+

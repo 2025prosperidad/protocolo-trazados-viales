@@ -1,0 +1,66 @@
+@startuml
+title Flujo General del Módulo de Trazados Viales
+
+actor "Ciudadano" as Ciudadano
+actor "Ventanilla (Analista)" as Ventanilla
+participant "Herramienta" as Herramienta
+participant "Motor de Asignación" as Motor
+participant "Grupo de Fase" as GrupoFase
+actor "Supervisor" as Supervisor
+actor "Técnico" as Tecnico
+actor "Derivación" as Derivacion
+database "Expediente Digital" as BD
+
+== REGISTRO DE TRÁMITE ==
+Ciudadano -> Ventanilla : Entrega información y documentación
+Ventanilla -> Ventanilla : Analista revisa y valida requisitos
+Ventanilla -> Herramienta : Registrar Trámite
+Herramienta -> Ventanilla : Confirmar creación del trámite
+
+== ASIGNACIÓN AUTOMÁTICA ==
+Herramienta -> Motor : Solicitar asignación de responsable por fase
+Motor -> GrupoFase : Solicitar siguiente técnico en rotación
+GrupoFase -> Motor : Devolver técnico seleccionado
+Motor -> Herramienta : Asignar trámite al técnico
+
+== NOTIFICACIONES ==
+Herramienta -> Supervisor : Notificar asignación
+Herramienta -> Tecnico : Enviar notificación
+Herramienta -> Ciudadano : Enviar confirmación
+Herramienta -> BD : Registrar evento de asignación
+
+== GESTIÓN DE FASES ==
+loop Por cada fase del trámite
+  Tecnico -> Herramienta : Trabajar en la fase actual
+  Herramienta -> Supervisor : Actualizar seguimiento
+  
+  alt Solicitud de información
+    Tecnico -> Herramienta : Solicitar información al ciudadano
+    Herramienta -> Ciudadano : Notificar solicitud
+    Ciudadano -> Ventanilla : Entregar información
+    Ventanilla -> Herramienta : Registrar información recibida
+    Herramienta -> Tecnico : Notificar recepción
+  else Derivación
+    Tecnico -> Herramienta : Solicitar derivación
+    Herramienta -> Derivacion : Enviar trámite a derivación
+    Derivacion -> Derivacion : Procesar trámite
+    Derivacion -> Herramienta : Devolver trámite procesado
+    Herramienta -> Tecnico : Notificar continuación
+  end
+  
+  Tecnico -> Herramienta : Finalizar fase y cargar entregables
+  Herramienta -> BD : Registrar finalización de fase
+  Herramienta -> Motor : Asignar siguiente fase
+  Motor -> Herramienta : Confirmar nueva asignación
+  Herramienta -> Tecnico : Notificar nueva fase
+  Herramienta -> Supervisor : Actualizar seguimiento
+end
+
+== CIERRE DEL TRÁMITE ==
+Herramienta -> BD : Guardar resolución final
+Herramienta -> Ciudadano : Notificar cierre
+Herramienta -> Tecnico : Notificar a todos los técnicos participantes
+Herramienta -> Supervisor : Informe final del trámite
+
+@enduml
+
