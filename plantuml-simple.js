@@ -87,14 +87,14 @@ function renderDiagram(code, container, filename) {
 
 async function generatePlantUMLImage(code, tempId) {
     const tempDiv = document.getElementById(tempId);
-
+    
     try {
-        // Codificar el código PlantUML usando el algoritmo correcto
-        const encoded = encodePlantUML(code);
-
-        // Usar la URL pública de PlantUML con el código codificado y el prefijo ~1
-        const imageUrl = `https://www.plantuml.com/plantuml/svg/~1${encoded}`;
-
+        // Usar codificación hexadecimal que soporta mejor UTF-8
+        const encoded = encodeToHex(code);
+        
+        // Usar la URL pública de PlantUML con codificación hex (~h)
+        const imageUrl = `https://www.plantuml.com/plantuml/svg/~h${encoded}`;
+        
         if (tempDiv) {
             tempDiv.innerHTML = `
                 <div style="background:#f8fafc;padding:1rem;border-radius:0.5rem;overflow-x:auto;text-align:center">
@@ -120,37 +120,14 @@ async function generatePlantUMLImage(code, tempId) {
     }
 }
 
-// Implementación de la codificación PlantUML
-function encodePlantUML(text) {
-    // Comprimir usando deflate
-    const compressed = pako.deflate(unescape(encodeURIComponent(text)), { level: 9 });
-
-    // Codificar usando el alfabeto especial de PlantUML
-    return encode64(compressed);
-}
-
-function encode64(data) {
-    let r = '';
-    const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_';
-
-    for (let i = 0; i < data.length; i += 3) {
-        if (i + 2 === data.length) {
-            r += append3bytes(data[i], data[i + 1], 0);
-        } else if (i + 1 === data.length) {
-            r += append3bytes(data[i], 0, 0);
-        } else {
-            r += append3bytes(data[i], data[i + 1], data[i + 2]);
-        }
+// Codificación hexadecimal para PlantUML (soporta UTF-8 correctamente)
+function encodeToHex(text) {
+    const utf8Bytes = new TextEncoder().encode(text);
+    let hex = '';
+    for (let i = 0; i < utf8Bytes.length; i++) {
+        hex += utf8Bytes[i].toString(16).padStart(2, '0');
     }
-    return r;
-
-    function append3bytes(b1, b2, b3) {
-        const c1 = b1 >> 2;
-        const c2 = ((b1 & 0x3) << 4) | (b2 >> 4);
-        const c3 = ((b2 & 0xF) << 2) | (b3 >> 6);
-        const c4 = b3 & 0x3F;
-        return alphabet.charAt(c1) + alphabet.charAt(c2) + alphabet.charAt(c3) + alphabet.charAt(c4);
-    }
+    return hex;
 }
 
 function setupTabs(container) {
