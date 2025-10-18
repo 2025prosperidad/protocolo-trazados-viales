@@ -394,13 +394,29 @@
                         </div>
                     </div>
 
-                    <!-- Aquí continuarían los demás flujos -->
+                    <!-- 6.6.2 Flujo de Ingreso -->
                     <div id="flujo-ingreso" class="flow-section">
                         <h4>6.6.2 Flujo de Ingreso de Información y Registro</h4>
                         <p class="text-content">
                             Este flujo describe el proceso completo desde que el ciudadano entrega su solicitud hasta
                             que el trámite es asignado automáticamente a un técnico y queda listo para su gestión.
                         </p>
+
+                        <div class="diagram-container">
+                            <div class="diagram-header">
+                                <h5>📊 Diagrama: Flujo de Ingreso de Información</h5>
+                                <button class="btn-expand" onclick="expandDiagram('diagram-flujo-ingreso')">Ver
+                                    Diagrama</button>
+                            </div>
+                            <div id="diagram-flujo-ingreso" class="diagram-content hidden">
+                                <div class="loading-diagram"
+                                    style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+                                    <p>Cargando diagrama PlantUML...</p>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="callout callout-success">
                             <strong>✅ Proceso garantiza:</strong>
                             <ul>
@@ -417,6 +433,21 @@
                             El núcleo del flujo de trabajo se fundamenta en la gestión secuencial de fases que conforman
                             el ciclo de vida de cada trámite.
                         </p>
+
+                        <div class="diagram-container">
+                            <div class="diagram-header">
+                                <h5>📊 Diagrama: Flujo de Revisión de Fases</h5>
+                                <button class="btn-expand" onclick="expandDiagram('diagram-flujo-fases')">Ver
+                                    Diagrama</button>
+                            </div>
+                            <div id="diagram-flujo-fases" class="diagram-content hidden">
+                                <div class="loading-diagram"
+                                    style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+                                    <p>Cargando diagrama PlantUML...</p>
+                                </div>
+                            </div>
+                        </div>
 
                         <h5>Secuencia de Fases por Tipo de Trámite:</h5>
                         <div class="tramites-grid">
@@ -459,6 +490,22 @@
                             Este flujo se activa cuando el técnico determina que necesita un documento, validación o
                             informe de una entidad externa.
                         </p>
+
+                        <div class="diagram-container">
+                            <div class="diagram-header">
+                                <h5>📊 Diagrama: Flujo de Derivación de Trámites</h5>
+                                <button class="btn-expand" onclick="expandDiagram('diagram-flujo-derivacion')">Ver
+                                    Diagrama</button>
+                            </div>
+                            <div id="diagram-flujo-derivacion" class="diagram-content hidden">
+                                <div class="loading-diagram"
+                                    style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+                                    <p>Cargando diagrama PlantUML...</p>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="callout callout-warning">
                             <strong>⏸️ Durante la derivación:</strong>
                             <ul>
@@ -476,6 +523,22 @@
                             Este proceso se inicia cuando el técnico detecta que la documentación proporcionada por el
                             ciudadano es insuficiente o incorrecta.
                         </p>
+
+                        <div class="diagram-container">
+                            <div class="diagram-header">
+                                <h5>📊 Diagrama: Flujo de Solicitud de Información</h5>
+                                <button class="btn-expand" onclick="expandDiagram('diagram-flujo-solicitud')">Ver
+                                    Diagrama</button>
+                            </div>
+                            <div id="diagram-flujo-solicitud" class="diagram-content hidden">
+                                <div class="loading-diagram"
+                                    style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+                                    <p>Cargando diagrama PlantUML...</p>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="info-box">
                             <h5>📤 Canales de entrega de información:</h5>
                             <ul>
