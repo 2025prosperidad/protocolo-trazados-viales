@@ -1,29 +1,90 @@
 // PlantUML Renderer - Solución Simple y Funcional
 
-const diagramFiles = {
-    'diagram-flujo-general': '1_flujo_general_modulo.puml',
-    'diagram-flujo-ingreso': '2_flujo_ingreso_informacion.puml',
-    'diagram-flujo-fases': '3_flujo_revision_fases.puml',
-    'diagram-flujo-derivacion': '4_flujo_derivacion.puml',
-    'diagram-flujo-solicitud': '5_flujo_solicitud_informacion.puml'
+// Código PlantUML embebido directamente
+const diagramCodes = {
+    'diagram-flujo-general': `@startuml
+!pragma charset UTF-8
+skinparam defaultFontName Arial
+title Flujo General del Módulo de Trazados Viales
+
+actor "Ciudadano" as Ciudadano
+actor "Ventanilla (Analista)" as Ventanilla
+participant "Herramienta" as Herramienta
+participant "Motor de Asignación" as Motor
+participant "Grupo de Fase" as GrupoFase
+actor "Supervisor" as Supervisor
+actor "Técnico" as Tecnico
+actor "Derivación" as Derivacion
+database "Expediente Digital" as BD
+
+== REGISTRO DE TRÁMITE ==
+Ciudadano -> Ventanilla : Entrega información y documentación
+Ventanilla -> Ventanilla : Analista revisa y valida requisitos
+Ventanilla -> Herramienta : Registrar Trámite
+Herramienta -> Ventanilla : Confirmar creación del trámite
+
+== ASIGNACIÓN AUTOMÁTICA ==
+Herramienta -> Motor : Solicitar asignación de responsable por fase
+Motor -> GrupoFase : Solicitar siguiente técnico en rotación
+GrupoFase -> Motor : Devolver técnico seleccionado
+Motor -> Herramienta : Asignar trámite al técnico
+
+== NOTIFICACIONES ==
+Herramienta -> Supervisor : Notificar asignación
+Herramienta -> Tecnico : Enviar notificación
+Herramienta -> Ciudadano : Enviar confirmación
+Herramienta -> BD : Registrar evento de asignación
+
+== GESTIÓN DE FASES ==
+loop Por cada fase del trámite
+  Tecnico -> Herramienta : Trabajar en la fase actual
+  Herramienta -> Supervisor : Actualizar seguimiento
+  
+  alt Solicitud de información
+    Tecnico -> Herramienta : Solicitar información al ciudadano
+    Herramienta -> Ciudadano : Notificar solicitud
+    Ciudadano -> Ventanilla : Entregar información
+    Ventanilla -> Herramienta : Registrar información recibida
+    Herramienta -> Tecnico : Notificar recepción
+  else Derivación
+    Tecnico -> Herramienta : Solicitar derivación
+    Herramienta -> Derivacion : Enviar trámite a derivación
+    Derivacion -> Derivacion : Procesar trámite
+    Derivacion -> Herramienta : Devolver trámite procesado
+    Herramienta -> Tecnico : Notificar continuación
+  end
+  
+  Tecnico -> Herramienta : Finalizar fase y cargar entregables
+  Herramienta -> BD : Registrar finalización de fase
+  Herramienta -> Motor : Asignar siguiente fase
+  Motor -> Herramienta : Confirmar nueva asignación
+  Herramienta -> Tecnico : Notificar nueva fase
+  Herramienta -> Supervisor : Actualizar seguimiento
+end
+
+== CIERRE DEL TRÁMITE ==
+Herramienta -> BD : Guardar resolución final
+Herramienta -> Ciudadano : Notificar cierre
+Herramienta -> Tecnico : Notificar a todos los técnicos participantes
+Herramienta -> Supervisor : Informe final del trámite
+
+@enduml`,
+    'diagram-flujo-ingreso': '@startuml',  // Se agregará después
+    'diagram-flujo-fases': '@startuml',    // Se agregará después
+    'diagram-flujo-derivacion': '@startuml', // Se agregará después
+    'diagram-flujo-solicitud': '@startuml'   // Se agregará después
 };
 
-async function loadAndRenderDiagram(containerId) {
+function loadAndRenderDiagram(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    const file = diagramFiles[containerId];
-    if (!file) return;
+    const code = diagramCodes[containerId];
+    if (!code) return;
 
     try {
         container.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text-secondary)"><div style="font-size:2rem">⏳</div><p>Cargando...</p></div>';
-
-        const response = await fetch(file);
-        if (!response.ok) throw new Error(`No se pudo cargar ${file}`);
-
-        const code = await response.text();
-        renderDiagram(code, container, file);
-
+        renderDiagram(code, container, containerId);
     } catch (error) {
         container.innerHTML = `<div style="padding:1.5rem;background:rgba(239,68,68,0.1);border:1px solid #ef4444;border-radius:0.5rem;color:#991b1b"><strong>⚠️ Error:</strong> ${error.message}</div>`;
     }
@@ -87,14 +148,14 @@ function renderDiagram(code, container, filename) {
 
 async function generatePlantUMLImage(code, tempId) {
     const tempDiv = document.getElementById(tempId);
-    
+
     try {
         // Codificar correctamente con UTF-8 y deflate
         const encoded = encodePlantUML(code);
-        
+
         // Usar la URL pública de PlantUML con el código codificado y el prefijo ~1
         const imageUrl = `https://www.plantuml.com/plantuml/svg/~1${encoded}`;
-        
+
         if (tempDiv) {
             tempDiv.innerHTML = `
                 <div style="background:#f8fafc;padding:1rem;border-radius:0.5rem;overflow-x:auto;text-align:center">
@@ -124,10 +185,10 @@ async function generatePlantUMLImage(code, tempId) {
 function encodePlantUML(text) {
     // Convertir texto a bytes UTF-8 usando TextEncoder
     const utf8Bytes = new TextEncoder().encode(text);
-    
+
     // Comprimir usando deflate
     const compressed = pako.deflate(utf8Bytes, { level: 9 });
-    
+
     // Codificar usando el alfabeto especial de PlantUML
     return encode64(compressed);
 }
@@ -135,7 +196,7 @@ function encodePlantUML(text) {
 function encode64(data) {
     let r = '';
     const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_';
-    
+
     for (let i = 0; i < data.length; i += 3) {
         if (i + 2 === data.length) {
             r += append3bytes(data[i], data[i + 1], 0);
@@ -146,7 +207,7 @@ function encode64(data) {
         }
     }
     return r;
-    
+
     function append3bytes(b1, b2, b3) {
         const c1 = b1 >> 2;
         const c2 = ((b1 & 0x3) << 4) | (b2 >> 4);
