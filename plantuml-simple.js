@@ -89,25 +89,16 @@ async function generatePlantUMLImage(code, tempId) {
     const tempDiv = document.getElementById(tempId);
     
     try {
-        // Crear un formulario temporal para POST
-        const formId = 'form-' + tempId;
-        const iframeId = 'iframe-' + tempId;
+        // Usar codificación UTF8 directa (formato ~u)
+        const utf8base64 = btoa(encodeURIComponent(code));
+        const imageUrl = `https://www.plantuml.com/plantuml/svg/~u${utf8base64}`;
         
         if (tempDiv) {
             tempDiv.innerHTML = `
-                <div style="background:#f8fafc;padding:1rem;border-radius:0.5rem;overflow-x:auto">
-                    <form id="${formId}" action="https://www.plantuml.com/plantuml/svg" method="POST" target="${iframeId}" style="display:none">
-                        <textarea name="text">${code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
-                    </form>
-                    <iframe id="${iframeId}" name="${iframeId}" style="width:100%;min-height:600px;border:none;border-radius:0.5rem" 
-                            onload="this.style.height=(this.contentDocument.body.scrollHeight+50)+'px'">
-                    </iframe>
+                <div style="background:#f8fafc;padding:1rem;border-radius:0.5rem;overflow-x:auto;text-align:center">
+                    <img src="${imageUrl}" alt="Diagrama PlantUML" style="max-width:100%;height:auto" 
+                         onerror="this.parentElement.innerHTML='<div style=\\'padding:1.5rem;background:rgba(239,68,68,0.1);border:1px solid #ef4444;border-radius:0.5rem;color:#991b1b\\'><strong>⚠️ Error al cargar diagrama</strong><p style=\\'margin-top:0.5rem;font-size:0.875rem\\'>Usa la pestaña \\'📝 Código\\' para copiar el código y pegarlo en <a href=\\'https://www.plantuml.com/plantuml/uml\\' target=\\'_blank\\' style=\\'color:#2563eb;text-decoration:underline\\'>PlantUML Online</a></p></div>'" />
                 </div>`;
-            
-            // Enviar el formulario automáticamente
-            setTimeout(() => {
-                document.getElementById(formId).submit();
-            }, 100);
         }
 
     } catch (error) {
