@@ -1,4 +1,6 @@
 @startuml
+!pragma charset UTF-8
+skinparam defaultFontName Arial
 title Flujo de Revisión de Fases de Trámite
 
 participant "Herramienta" as Herramienta

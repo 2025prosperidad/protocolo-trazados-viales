@@ -1,4 +1,6 @@
 @startuml
+!pragma charset UTF-8
+skinparam defaultFontName Arial
 title Flujo de Solicitud de Información al Usuario
 
 participant "Herramienta" as Herramienta

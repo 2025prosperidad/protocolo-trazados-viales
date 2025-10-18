@@ -1,4 +1,6 @@
 @startuml
+!pragma charset UTF-8
+skinparam defaultFontName Arial
 title Flujo General del Módulo de Trazados Viales
 
 actor "Ciudadano" as Ciudadano

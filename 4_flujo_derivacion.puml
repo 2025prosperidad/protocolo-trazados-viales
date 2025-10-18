@@ -1,4 +1,6 @@
 @startuml
+!pragma charset UTF-8
+skinparam defaultFontName Arial
 title Flujo de Derivación de Trámites
 
 participant "Herramienta" as Herramienta
