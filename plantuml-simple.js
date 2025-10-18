@@ -69,10 +69,168 @@ Herramienta -> Tecnico : Notificar a todos los técnicos participantes
 Herramienta -> Supervisor : Informe final del trámite
 
 @enduml`,
-    'diagram-flujo-ingreso': '@startuml',  // Se agregará después
-    'diagram-flujo-fases': '@startuml',    // Se agregará después
-    'diagram-flujo-derivacion': '@startuml', // Se agregará después
-    'diagram-flujo-solicitud': '@startuml'   // Se agregará después
+    'diagram-flujo-ingreso': String.raw`@startuml
+!pragma charset UTF-8
+skinparam defaultFontName Arial
+title Flujo de Ingreso de Información y Registro de Trámite
+
+actor "Ciudadano" as Ciudadano
+actor "Ventanilla (Analista)" as Ventanilla
+participant "Herramienta" as Herramienta
+participant "Motor de Asignación" as Motor
+participant "Grupo de Fase" as GrupoFase
+actor "Supervisor" as Supervisor
+actor "Técnico" as Tecnico
+database "Expediente Digital" as BD
+
+== INICIO: RECEPCIÓN DE SOLICITUD ==
+Ciudadano -> Ventanilla : Entrega información y documentación requerida
+Ventanilla -> Ventanilla : Analista revisa y valida requisitos
+
+== REGISTRO EN EL SISTEMA ==
+Ventanilla -> Herramienta : Registrar Trámite
+Herramienta -> Ventanilla : Mostrar confirmación de creación
+Herramienta -> BD : Crear expediente digital
+
+== ASIGNACIÓN AUTOMÁTICA DE RESPONSABLE ==
+Herramienta -> Motor : Solicitar asignación de responsable por fase
+Motor -> GrupoFase : Solicitar siguiente técnico en rotación según perfil
+GrupoFase -> Motor : Devolver técnico seleccionado
+Motor -> Herramienta : Asignar trámite al técnico
+
+== NOTIFICACIONES Y ACTIVACIÓN ==
+Herramienta -> BD : Registrar evento de asignación
+Herramienta -> Supervisor : Notificar asignación (vista en panel)
+Herramienta -> Tecnico : Enviar notificación (correo + WhatsApp)
+Herramienta -> Ciudadano : Enviar confirmación (correo + WhatsApp)
+Tecnico -> Herramienta : Acceder al expediente y comenzar gestión
+
+@enduml`,
+    'diagram-flujo-fases': String.raw`@startuml
+!pragma charset UTF-8
+skinparam defaultFontName Arial
+title Flujo de Revisión de Fases de Trámite
+
+participant "Herramienta" as Herramienta
+participant "Motor de Asignación" as Motor
+participant "Grupo de Fase" as GrupoFase
+actor "Supervisor" as Supervisor
+actor "Técnico" as Tecnico
+actor "Ciudadano" as Ciudadano
+database "Expediente Digital" as BD
+
+== CICLO DE GESTIÓN DE FASES ==
+
+loop Por cada fase del trámite
+  
+  == INICIO DE FASE ==
+  Tecnico -> Herramienta : Acceder a la fase asignada
+  Herramienta -> Tecnico : Mostrar información del trámite
+  Tecnico -> Herramienta : Iniciar trabajo de la fase asignada
+  Herramienta -> Supervisor : Actualizar seguimiento del trámite
+  
+  == GESTIÓN DE LA FASE ==
+  Tecnico -> Tecnico : Realizar análisis técnico
+  
+  == FINALIZACIÓN DE FASE ==
+  Tecnico -> Herramienta : Finalizar fase y cargar entregables
+  Herramienta -> Supervisor : Actualizar seguimiento de la fase
+  Herramienta -> BD : Registrar finalización de fase
+  
+  == TRANSICIÓN A SIGUIENTE FASE ==
+  Herramienta -> Motor : Evaluar y asignar siguiente fase automáticamente
+  Motor -> GrupoFase : Seleccionar grupo/miembro disponible para siguiente fase
+  GrupoFase -> Motor : Devolver técnico seleccionado
+  Motor -> Herramienta : Confirmar nueva asignación
+  
+  == NOTIFICACIONES DE AVANCE ==
+  Herramienta -> Tecnico : Notificar nueva fase asignada
+  Herramienta -> Ciudadano : Notificar avance del trámite
+  Herramienta -> Supervisor : Actualizar seguimiento con nueva fase
+  
+end
+
+@enduml`,
+    'diagram-flujo-derivacion': String.raw`@startuml
+!pragma charset UTF-8
+skinparam defaultFontName Arial
+title Flujo de Derivación de Trámites
+
+participant "Herramienta" as Herramienta
+actor "Técnico" as Tecnico
+actor "Derivación" as Derivacion
+actor "Supervisor" as Supervisor
+actor "Ciudadano" as Ciudadano
+database "Expediente Digital" as BD
+
+== INICIO: DETECCIÓN DE NECESIDAD DE DERIVACIÓN ==
+
+Tecnico -> Tecnico : Analizar trámite en fase actual
+Tecnico -> Herramienta : Solicitar derivación
+
+== CAMBIO DE ESTADO Y NOTIFICACIONES ==
+
+Herramienta -> BD : Cambiar estado del trámite a "En Derivación"
+Herramienta -> Derivacion : Enviar trámite a derivación
+Herramienta -> Supervisor : Notificar derivación del trámite
+Herramienta -> Ciudadano : Notificar pausa temporal del trámite
+
+== GESTIÓN EN DERIVACIÓN ==
+
+Derivacion -> Derivacion : Procesar y gestionar el trámite derivado
+
+== RESPUESTA Y REACTIVACIÓN ==
+
+Derivacion -> Herramienta : Responder y devolver trámite procesado
+Herramienta -> BD : Cambiar estado a "En Proceso"
+Herramienta -> Tecnico : Notificar continuación después de derivación
+Herramienta -> Supervisor : Actualizar seguimiento post-derivación
+Herramienta -> Ciudadano : Notificar reactivación del trámite
+Tecnico -> Herramienta : Continuar con la gestión de la fase
+
+@enduml`,
+    'diagram-flujo-solicitud': String.raw`@startuml
+!pragma charset UTF-8
+skinparam defaultFontName Arial
+title Flujo de Solicitud de Información al Usuario
+
+participant "Herramienta" as Herramienta
+actor "Técnico" as Tecnico
+actor "Ventanilla (Analista)" as Ventanilla
+actor "Ciudadano" as Ciudadano
+actor "Supervisor" as Supervisor
+database "Expediente Digital" as BD
+
+== INICIO: DETECCIÓN DE INFORMACIÓN FALTANTE ==
+
+Tecnico -> Tecnico : Revisar documentación en fase actual
+Tecnico -> Herramienta : Solicitar información o documentación al ciudadano
+
+== CAMBIO DE ESTADO Y NOTIFICACIÓN ==
+
+Herramienta -> BD : Cambiar estado del trámite a "Solicitud de Información"
+Herramienta -> Ciudadano : Notificar solicitud de información
+Herramienta -> Supervisor : Notificar pausa del trámite
+
+== RESPUESTA DEL CIUDADANO ==
+
+Ciudadano -> Ventanilla : Entregar información solicitada
+Ventanilla -> Ventanilla : Verificar documentación recibida
+
+== REGISTRO Y REACTIVACIÓN ==
+
+Ventanilla -> Herramienta : Registrar información recibida
+Herramienta -> BD : Actualizar expediente y cambiar estado a "En Proceso"
+Herramienta -> Tecnico : Notificar recepción de información
+Herramienta -> Supervisor : Actualizar seguimiento
+Herramienta -> Ciudadano : Confirmar recepción y reactivación
+
+== CONTINUACIÓN DEL PROCESO ==
+
+Tecnico -> Herramienta : Continuar con la gestión de la fase
+Tecnico -> Tecnico : Completar análisis técnico
+
+@enduml`
 };
 
 function loadAndRenderDiagram(containerId) {
