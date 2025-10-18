@@ -89,9 +89,11 @@ async function generatePlantUMLImage(code, tempId) {
     const tempDiv = document.getElementById(tempId);
     
     try {
-        // Usar codificación UTF8 directa (formato ~u)
-        const utf8base64 = btoa(encodeURIComponent(code));
-        const imageUrl = `https://www.plantuml.com/plantuml/svg/~u${utf8base64}`;
+        // Codificar correctamente con UTF-8 y deflate
+        const encoded = encodePlantUML(code);
+        
+        // Usar la URL pública de PlantUML con el código codificado y el prefijo ~1
+        const imageUrl = `https://www.plantuml.com/plantuml/svg/~1${encoded}`;
         
         if (tempDiv) {
             tempDiv.innerHTML = `
@@ -115,6 +117,42 @@ async function generatePlantUMLImage(code, tempId) {
                     </p>
                 </div>`;
         }
+    }
+}
+
+// Implementación de la codificación PlantUML con soporte UTF-8 correcto
+function encodePlantUML(text) {
+    // Convertir texto a bytes UTF-8 usando TextEncoder
+    const utf8Bytes = new TextEncoder().encode(text);
+    
+    // Comprimir usando deflate
+    const compressed = pako.deflate(utf8Bytes, { level: 9 });
+    
+    // Codificar usando el alfabeto especial de PlantUML
+    return encode64(compressed);
+}
+
+function encode64(data) {
+    let r = '';
+    const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_';
+    
+    for (let i = 0; i < data.length; i += 3) {
+        if (i + 2 === data.length) {
+            r += append3bytes(data[i], data[i + 1], 0);
+        } else if (i + 1 === data.length) {
+            r += append3bytes(data[i], 0, 0);
+        } else {
+            r += append3bytes(data[i], data[i + 1], data[i + 2]);
+        }
+    }
+    return r;
+    
+    function append3bytes(b1, b2, b3) {
+        const c1 = b1 >> 2;
+        const c2 = ((b1 & 0x3) << 4) | (b2 >> 4);
+        const c3 = ((b2 & 0xF) << 2) | (b3 >> 6);
+        const c4 = b3 & 0x3F;
+        return alphabet.charAt(c1) + alphabet.charAt(c2) + alphabet.charAt(c3) + alphabet.charAt(c4);
     }
 }
 
