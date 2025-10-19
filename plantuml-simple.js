@@ -231,7 +231,7 @@ Tecnico -> Herramienta : Continuar con la gestión de la fase
 Tecnico -> Tecnico : Completar análisis técnico
 
 @enduml`,
-  'diagram-trazado-vial': String.raw`@startuml
+  'diagram-trazado-vial': `@startuml
 !pragma charset UTF-8
 skinparam defaultFontName Arial
 title Flujo del Trámite de Trazado Vial
@@ -327,7 +327,7 @@ Herramienta -> TecCivil : Notificar cierre
 Herramienta -> Supervisor : Informe final
 
 @enduml`,
-  'diagram-certificacion-vial': String.raw`@startuml
+  'diagram-certificacion-vial': `@startuml
 !pragma charset UTF-8
 skinparam defaultFontName Arial
 title Flujo del Trámite de Certificación Vial
@@ -388,7 +388,7 @@ Herramienta -> TecGeo : Notificar cierre
 Herramienta -> Supervisor : Informe final
 
 @enduml`,
-  'diagram-replanteo-vial': String.raw`@startuml
+  'diagram-replanteo-vial': `@startuml
 !pragma charset UTF-8
 skinparam defaultFontName Arial
 title Flujo del Trámite de Replanteo Vial
@@ -454,7 +454,7 @@ Herramienta -> TecGeo : Notificar cierre
 Herramienta -> Supervisor : Informe final
 
 @enduml`,
-  'diagram-secciones-transversales': String.raw`@startuml
+  'diagram-secciones-transversales': `@startuml
 !pragma charset UTF-8
 skinparam defaultFontName Arial
 title Flujo del Trámite de Secciones Transversales
@@ -510,7 +510,7 @@ Herramienta -> TecGeo : Notificar cierre
 Herramienta -> Supervisor : Informe final
 
 @enduml`,
-  'diagram-colocacion-eje': String.raw`@startuml
+  'diagram-colocacion-eje': `@startuml
 !pragma charset UTF-8
 skinparam defaultFontName Arial
 title Flujo del Trámite de Colocación de Eje Vial
@@ -578,7 +578,7 @@ Herramienta -> TecTopo : Notificar cierre
 Herramienta -> Supervisor : Informe final
 
 @enduml`,
-  'diagram-colocacion-infraestructura': String.raw`@startuml
+  'diagram-colocacion-infraestructura': `@startuml
 !pragma charset UTF-8
 skinparam defaultFontName Arial
 title Flujo del Trámite de Colocación de Infraestructura
@@ -635,7 +635,7 @@ Herramienta -> TecGeo : Notificar cierre
 Herramienta -> Supervisor : Informe final
 
 @enduml`,
-  'diagram-declaratoria-camino': String.raw`@startuml
+  'diagram-declaratoria-camino': `@startuml
 !pragma charset UTF-8
 skinparam defaultFontName Arial
 title Flujo del Trámite de Declaratoria de Camino Público
