@@ -60,6 +60,17 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li><a href="#flujos-especificos" class="nav-link">6.7 Flujos Específicos por Tipo de Trámite</a>
+                                <ul class="sub-menu">
+                                    <li><a href="#tramite-trazado" class="nav-link">6.7.1 Trazado Vial</a></li>
+                                    <li><a href="#tramite-certificacion" class="nav-link">6.7.2 Certificación Vial</a></li>
+                                    <li><a href="#tramite-replanteo" class="nav-link">6.7.3 Replanteo Vial</a></li>
+                                    <li><a href="#tramite-secciones" class="nav-link">6.7.4 Secciones Transversales</a></li>
+                                    <li><a href="#tramite-eje" class="nav-link">6.7.5 Colocación Eje Vial</a></li>
+                                    <li><a href="#tramite-infraestructura" class="nav-link">6.7.6 Colocación Infraestructura</a></li>
+                                    <li><a href="#tramite-declaratoria" class="nav-link">6.7.7 Declaratoria Camino Público</a></li>
+                                </ul>
+                            </li>
                         </ul>
                     </li>
                     <li><a href="#diseno-trazado" class="nav-link">7. Módulo de Diseño</a></li>
@@ -548,6 +559,205 @@
                             </ul>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            <!-- 6.7. Flujos Específicos por Tipo de Trámite -->
+            <section id="flujos-especificos" class="section">
+                <h2 class="section-title">6.7 FLUJOS ESPECÍFICOS POR TIPO DE TRÁMITE</h2>
+                <p class="text-content">
+                    El sistema gestiona 7 tipos de trámites de vialidad, cada uno con su flujo específico de fases,
+                    responsables y tiempos. A continuación, se detallan los flujos completos para cada tipo de trámite,
+                    adaptados al modelo de gestión automatizada del módulo.
+                </p>
+
+                <!-- 6.7.1 Trazado Vial -->
+                <div id="tramite-trazado" class="flow-section">
+                    <h3>6.7.1 Flujo del Trámite de Trazado Vial</h3>
+                    <p class="text-content">
+                        <strong>Duración total estimada: 162 días</strong><br>
+                        El trámite de Trazado Vial es el más completo y pasa por 6 fases: Competencia, Informe de
+                        Pertinencia, Topografía, Diseño Geométrico, Informe de Trazado Vial, y Resoluciones y Oficios.
+                    </p>
+
+                    <div class="diagram-container">
+                        <div class="diagram-header">
+                            <h5>📊 Diagrama: Flujo del Trámite de Trazado Vial</h5>
+                            <button class="btn-expand" onclick="expandDiagram('diagram-trazado-vial')">Ver
+                                Diagrama</button>
+                        </div>
+                        <div id="diagram-trazado-vial" class="diagram-content hidden">
+                            <div class="loading-diagram"
+                                style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+                                <p>Cargando diagrama PlantUML...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6.7.2 Certificación Vial -->
+                <div id="tramite-certificacion" class="flow-section">
+                    <h3>6.7.2 Flujo del Trámite de Certificación Vial</h3>
+                    <p class="text-content">
+                        <strong>Duración total estimada: 24 días</strong><br>
+                        El trámite de Certificación Vial consta de 3 fases: Competencia, Verificación de Aprobación e
+                        Informe de Certificación. Es uno de los trámites más rápidos del sistema.
+                    </p>
+
+                    <div class="diagram-container">
+                        <div class="diagram-header">
+                            <h5>📊 Diagrama: Flujo del Trámite de Certificación Vial</h5>
+                            <button class="btn-expand" onclick="expandDiagram('diagram-certificacion-vial')">Ver
+                                Diagrama</button>
+                        </div>
+                        <div id="diagram-certificacion-vial" class="diagram-content hidden">
+                            <div class="loading-diagram"
+                                style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+                                <p>Cargando diagrama PlantUML...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6.7.3 Replanteo Vial -->
+                <div id="tramite-replanteo" class="flow-section">
+                    <h3>6.7.3 Flujo del Trámite de Replanteo Vial</h3>
+                    <p class="text-content">
+                        <strong>Duración total estimada: 30 días</strong><br>
+                        El trámite de Replanteo Vial incluye 3 fases: Competencia, Verificación de Aprobación (con
+                        posible digitalización de planos e inspección), e Informe de Replanteo.
+                    </p>
+
+                    <div class="diagram-container">
+                        <div class="diagram-header">
+                            <h5>📊 Diagrama: Flujo del Trámite de Replanteo Vial</h5>
+                            <button class="btn-expand" onclick="expandDiagram('diagram-replanteo-vial')">Ver
+                                Diagrama</button>
+                        </div>
+                        <div id="diagram-replanteo-vial" class="diagram-content hidden">
+                            <div class="loading-diagram"
+                                style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+                                <p>Cargando diagrama PlantUML...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6.7.4 Secciones Transversales -->
+                <div id="tramite-secciones" class="flow-section">
+                    <h3>6.7.4 Flujo del Trámite de Secciones Transversales</h3>
+                    <p class="text-content">
+                        <strong>Duración total estimada: 30 días</strong><br>
+                        El trámite de Secciones Transversales pasa por 4 fases: Competencia, Verificación de Aprobación,
+                        Inspección e Informe de Sección. Es exclusivo para GADs (Gobiernos Autónomos Descentralizados).
+                    </p>
+
+                    <div class="diagram-container">
+                        <div class="diagram-header">
+                            <h5>📊 Diagrama: Flujo del Trámite de Secciones Transversales</h5>
+                            <button class="btn-expand" onclick="expandDiagram('diagram-secciones-transversales')">Ver
+                                Diagrama</button>
+                        </div>
+                        <div id="diagram-secciones-transversales" class="diagram-content hidden">
+                            <div class="loading-diagram"
+                                style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+                                <p>Cargando diagrama PlantUML...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6.7.5 Colocación de Eje Vial -->
+                <div id="tramite-eje" class="flow-section">
+                    <h3>6.7.5 Flujo del Trámite de Colocación de Eje Vial</h3>
+                    <p class="text-content">
+                        <strong>Duración total estimada: 30 días</strong><br>
+                        El trámite de Colocación de Eje Vial consta de 5 fases: Competencia, Verificación de Aprobación,
+                        Determinación de Coordenadas del Eje, Trabajo en Territorio e Informe de Colocación.
+                    </p>
+
+                    <div class="diagram-container">
+                        <div class="diagram-header">
+                            <h5>📊 Diagrama: Flujo del Trámite de Colocación de Eje Vial</h5>
+                            <button class="btn-expand" onclick="expandDiagram('diagram-colocacion-eje')">Ver
+                                Diagrama</button>
+                        </div>
+                        <div id="diagram-colocacion-eje" class="diagram-content hidden">
+                            <div class="loading-diagram"
+                                style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+                                <p>Cargando diagrama PlantUML...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6.7.6 Colocación de Infraestructura -->
+                <div id="tramite-infraestructura" class="flow-section">
+                    <h3>6.7.6 Flujo del Trámite de Colocación de Infraestructura</h3>
+                    <p class="text-content">
+                        <strong>Duración total estimada: 35 días</strong><br>
+                        El trámite de Colocación de Infraestructura incluye 3 fases: Competencia, Verificación de
+                        Frentistas e Informe de Autorización. Requiere la validación de propietarios colindantes.
+                    </p>
+
+                    <div class="diagram-container">
+                        <div class="diagram-header">
+                            <h5>📊 Diagrama: Flujo del Trámite de Colocación de Infraestructura</h5>
+                            <button class="btn-expand" onclick="expandDiagram('diagram-colocacion-infraestructura')">Ver
+                                Diagrama</button>
+                        </div>
+                        <div id="diagram-colocacion-infraestructura" class="diagram-content hidden">
+                            <div class="loading-diagram"
+                                style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+                                <p>Cargando diagrama PlantUML...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6.7.7 Declaratoria de Camino Público -->
+                <div id="tramite-declaratoria" class="flow-section">
+                    <h3>6.7.7 Flujo del Trámite de Factibilidad de Declaratoria de Camino Público</h3>
+                    <p class="text-content">
+                        <strong>Duración total estimada: 60 días</strong><br>
+                        El trámite de Declaratoria de Camino Público es el más extenso y consta de 2 fases principales:
+                        Competencia e Informe para el MTOP. Requiere la elaboración de planimetría en formato SHAPE y
+                        coordinación con el Ministerio de Transporte y Obras Públicas.
+                    </p>
+
+                    <div class="diagram-container">
+                        <div class="diagram-header">
+                            <h5>📊 Diagrama: Flujo del Trámite de Declaratoria de Camino Público</h5>
+                            <button class="btn-expand" onclick="expandDiagram('diagram-declaratoria-camino')">Ver
+                                Diagrama</button>
+                        </div>
+                        <div id="diagram-declaratoria-camino" class="diagram-content hidden">
+                            <div class="loading-diagram"
+                                style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+                                <p>Cargando diagrama PlantUML...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box" style="margin-top: 2rem;">
+                    <h5>📋 Resumen de tiempos por tipo de trámite:</h5>
+                    <ul>
+                        <li><strong>Certificación Vial:</strong> 24 días (el más rápido)</li>
+                        <li><strong>Replanteo Vial:</strong> 30 días</li>
+                        <li><strong>Secciones Transversales:</strong> 30 días</li>
+                        <li><strong>Colocación de Eje Vial:</strong> 30 días</li>
+                        <li><strong>Colocación de Infraestructura:</strong> 35 días</li>
+                        <li><strong>Declaratoria de Camino Público:</strong> 60 días</li>
+                        <li><strong>Trazado Vial:</strong> 162 días (el más completo)</li>
+                    </ul>
                 </div>
             </section>
 

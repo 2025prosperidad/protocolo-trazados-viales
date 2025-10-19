@@ -1,0 +1,68 @@
+@startuml
+!pragma charset UTF-8
+skinparam defaultFontName Arial
+title Flujo del Trámite de Colocación de Infraestructura
+subtitle Duración total estimada: 35 días
+
+actor "Ciudadano" as Ciudadano
+actor "Ventanilla (Analista)" as Ventanilla
+participant "Herramienta" as Herramienta
+actor "Técnico Ing. Civil" as TecCivil
+actor "Técnico Geógrafo" as TecGeo
+actor "Supervisor" as Supervisor
+database "Expediente Digital" as BD
+
+== FASE 1: COMPETENCIA (3 días) ==
+note over TecCivil, TecGeo
+  Responsables: Cristian, Romario, 
+  Cristina (Ingenieros Civiles)
+  Marcelo (Ingeniero Geógrafo)
+end note
+
+Ciudadano -> Ventanilla : Entrega solicitud y requisitos
+Ventanilla -> Herramienta : Registrar trámite
+Herramienta -> TecCivil : Asignar fase de competencia
+TecCivil -> TecCivil : Verificar competencia
+
+alt Es competente
+  TecCivil -> TecCivil : Revisar requisitos completos
+  alt Requisitos completos
+    TecCivil -> Herramienta : Continuar a siguiente fase
+  else Requisitos incompletos
+    TecCivil -> Herramienta : Solicitar información
+    Herramienta -> Ciudadano : Notificar solicitud
+    Ciudadano -> Ventanilla : Entregar información
+    Ventanilla -> Herramienta : Registrar información
+  end
+else No es competente
+  TecCivil -> Herramienta : Elaborar respuesta de no competencia
+  Herramienta -> Supervisor : Revisar respuesta
+  Supervisor -> Supervisor : Revisar y firmar director
+  Herramienta -> BD : Guardar respuesta
+  Herramienta -> Ciudadano : Notificar no competencia
+end
+
+== FASE 2: VERIFICACIÓN DE FRENTISTAS (20 días) ==
+Herramienta -> TecCivil : Asignar fase de verificación
+TecCivil -> TecCivil : Verificar información de frentistas
+note right
+  Se valida la existencia y conformidad 
+  de los frentistas respecto a la 
+  infraestructura solicitada
+end note
+Herramienta -> BD : Guardar verificación
+
+== FASE 3: INFORME DE AUTORIZACIÓN (12 días) ==
+Herramienta -> TecGeo : Asignar elaboración de informe
+TecGeo -> Herramienta : Elaborar informe de colocación de infraestructura
+Herramienta -> Supervisor : Revisar informe
+Supervisor -> Supervisor : Revisar coordinación
+TecGeo -> Herramienta : Elaborar oficios de respuesta
+Supervisor -> Supervisor : Revisar y firma director
+Herramienta -> BD : Guardar informe final
+Herramienta -> Ciudadano : Enviar respuesta al usuario
+Herramienta -> TecGeo : Notificar cierre
+Herramienta -> Supervisor : Informe final
+
+@enduml
+

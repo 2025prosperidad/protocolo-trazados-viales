@@ -1,0 +1,78 @@
+@startuml
+!pragma charset UTF-8
+skinparam defaultFontName Arial
+title Flujo del Trámite de Replanteo Vial
+subtitle Duración total estimada: 30 días
+
+actor "Ciudadano" as Ciudadano
+actor "Ventanilla (Analista)" as Ventanilla
+participant "Herramienta" as Herramienta
+actor "Técnico Arquitecto" as TecArq
+actor "Técnico Geógrafo" as TecGeo
+actor "Supervisor" as Supervisor
+database "Expediente Digital" as BD
+
+== FASE 1: COMPETENCIA (4 días) ==
+note over TecArq
+  Responsables: Arquitectos + Geógrafo
+end note
+
+Ciudadano -> Ventanilla : Entrega solicitud y requisitos
+Ventanilla -> Herramienta : Registrar trámite
+Herramienta -> TecArq : Asignar fase de competencia
+TecArq -> TecArq : Verificar competencia
+
+alt Es competente
+  TecArq -> TecArq : Revisar requisitos completos
+  alt Requisitos completos
+    TecArq -> Herramienta : Continuar a siguiente fase
+  else Requisitos incompletos
+    TecArq -> Herramienta : Solicitar información
+    Herramienta -> Ciudadano : Notificar solicitud
+    Ciudadano -> Ventanilla : Entregar información
+    Ventanilla -> Herramienta : Registrar información
+  end
+else No es competente
+  TecArq -> Herramienta : Elaborar respuesta de no competencia
+  Herramienta -> Supervisor : Revisar respuesta
+  Supervisor -> Supervisor : Revisar y firmar director
+  Herramienta -> BD : Guardar respuesta
+  Herramienta -> Ciudadano : Notificar no competencia
+end
+
+== FASE 2: VERIFICACIÓN DE APROBACIÓN (6 días) ==
+Herramienta -> TecArq : Asignar fase de verificación
+TecArq -> TecArq : Verificar información
+
+alt Existen planos por digitalizar
+  TecArq -> TecArq : Digitalización de planos escaneados
+end
+
+TecArq -> TecArq : Analizar y verificar pertinencia
+TecArq -> TecArq : Verificar vías aprobadas
+
+alt Requiere inspección
+  TecArq -> TecArq : Inspección en territorio
+end
+
+Herramienta -> BD : Guardar verificación
+
+== FASE 3: INFORME DE REPLANTEO (17 días) ==
+note over TecGeo
+  Responsables: Irene, Carla, Nicole, 
+  Santiago, Evelyn, Marcelo
+end note
+
+Herramienta -> TecGeo : Asignar elaboración de informe
+TecGeo -> Herramienta : Elaborar informe de replanteo vial
+Herramienta -> Supervisor : Revisar informe
+Supervisor -> Supervisor : Revisar coordinación
+TecGeo -> Herramienta : Elaborar oficio para usuario
+Supervisor -> Supervisor : Revisar y firma director
+Herramienta -> BD : Guardar informe final
+Herramienta -> Ciudadano : Enviar respuesta de replanteo vial
+Herramienta -> TecGeo : Notificar cierre
+Herramienta -> Supervisor : Informe final
+
+@enduml
+

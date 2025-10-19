@@ -1,0 +1,75 @@
+@startuml
+!pragma charset UTF-8
+skinparam defaultFontName Arial
+title Flujo del Trámite de Certificación Vial
+subtitle Duración total estimada: 24 días
+
+actor "Ciudadano" as Ciudadano
+actor "Ventanilla (Analista)" as Ventanilla
+participant "Herramienta" as Herramienta
+actor "Técnico Ing. Civil" as TecCivil
+actor "Técnico Geógrafo" as TecGeo
+actor "Supervisor" as Supervisor
+database "Expediente Digital" as BD
+
+== FASE 1: COMPETENCIA (4 días) ==
+note over TecCivil
+  Responsables: Cristian, Romario, Cristina
+end note
+
+Ciudadano -> Ventanilla : Entrega solicitud y requisitos
+Ventanilla -> Herramienta : Registrar trámite
+Herramienta -> TecCivil : Asignar fase de competencia
+TecCivil -> TecCivil : Verificar competencia
+
+alt Es competente
+  TecCivil -> TecCivil : Revisar requisitos completos
+  alt Requisitos completos
+    TecCivil -> Herramienta : Continuar a siguiente fase
+  else Requisitos incompletos
+    TecCivil -> Herramienta : Solicitar información
+    Herramienta -> Ciudadano : Notificar solicitud
+    Ciudadano -> Ventanilla : Entregar información
+    Ventanilla -> Herramienta : Registrar información
+  end
+else No es competente
+  TecCivil -> Herramienta : Elaborar respuesta de no competencia
+  Herramienta -> Supervisor : Revisar respuesta
+  Supervisor -> Supervisor : Revisar y firmar director
+  Herramienta -> BD : Guardar respuesta
+  Herramienta -> Ciudadano : Notificar no competencia
+end
+
+== FASE 2: VERIFICACIÓN DE APROBACIÓN (5 días) ==
+note over TecGeo
+  Responsables: Katty, Marcelo
+end note
+
+Herramienta -> TecGeo : Asignar fase de verificación
+TecGeo -> TecGeo : Analizar y verificar pertinencia
+TecGeo -> TecGeo : Verificar aprobaciones de vías
+
+alt Requiere información adicional
+  TecGeo -> Herramienta : Solicitar información
+  Herramienta -> Ciudadano : Notificar solicitud
+  Ciudadano -> Ventanilla : Entregar información
+  Ventanilla -> Herramienta : Registrar información
+  Herramienta -> Supervisor : Revisar oficio
+  Supervisor -> Supervisor : Revisar y firmar director
+end
+
+TecGeo -> Herramienta : Completar verificación
+Herramienta -> BD : Guardar verificación
+
+== FASE 3: INFORME DE CERTIFICACIÓN (15 días) ==
+TecGeo -> Herramienta : Elaborar informe de certificación vial
+Herramienta -> Supervisor : Revisar informe
+Supervisor -> Supervisor : Revisar coordinación
+Supervisor -> Supervisor : Revisar y firma director
+Herramienta -> BD : Guardar certificación final
+Herramienta -> Ciudadano : Enviar certificación vial
+Herramienta -> TecGeo : Notificar cierre
+Herramienta -> Supervisor : Informe final
+
+@enduml
+

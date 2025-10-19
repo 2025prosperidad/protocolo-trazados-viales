@@ -1,0 +1,72 @@
+@startuml
+!pragma charset UTF-8
+skinparam defaultFontName Arial
+title Flujo del Trámite de Factibilidad de Declaratoria de Camino Público
+subtitle Duración total estimada: 60 días
+
+actor "Ciudadano" as Ciudadano
+actor "Ventanilla (Analista)" as Ventanilla
+participant "Herramienta" as Herramienta
+actor "Técnico Geógrafo" as TecGeo
+actor "Supervisor" as Supervisor
+participant "MTOP" as MTOP
+database "Expediente Digital" as BD
+
+== FASE 1: COMPETENCIA (15 días) ==
+note over TecGeo
+  Responsables: Fernanda, Katty, 
+  Alicia, Marcelo
+end note
+
+Ciudadano -> Ventanilla : Entrega solicitud y requisitos
+Ventanilla -> Herramienta : Registrar trámite
+Herramienta -> TecGeo : Asignar fase de competencia
+TecGeo -> TecGeo : Verificar competencia
+
+alt Es competente
+  TecGeo -> TecGeo : Revisar requisitos completos
+  alt Requisitos completos
+    TecGeo -> Herramienta : Elaborar mapa de competencia y pertinencia
+    TecGeo -> Herramienta : Elaborar planimetría en formato SHAPE
+    Herramienta -> BD : Guardar documentos técnicos
+  else Requisitos incompletos
+    TecGeo -> Herramienta : Solicitar información
+    Herramienta -> Ciudadano : Notificar solicitud
+    Ciudadano -> Ventanilla : Entregar información
+    Ventanilla -> Herramienta : Registrar información
+  end
+else No es competente
+  TecGeo -> Herramienta : Elaborar informe de no competencia
+  Herramienta -> Supervisor : Revisar informe
+  Supervisor -> Supervisor : Revisar y firmar director
+  Herramienta -> BD : Guardar respuesta
+  Herramienta -> Ciudadano : Notificar no competencia
+end
+
+== FASE 2: INFORME PARA EL MTOP (45 días) ==
+Herramienta -> TecGeo : Asignar elaboración de informe
+TecGeo -> TecGeo : Analizar y verificar pertinencia
+
+alt Requiere información adicional
+  TecGeo -> Herramienta : Solicitar información a terceros
+  Herramienta -> TecGeo : Recibir información
+end
+
+TecGeo -> Herramienta : Elaborar informe técnico
+Herramienta -> Supervisor : Revisar informe
+Supervisor -> Supervisor : Revisar coordinación
+TecGeo -> Herramienta : Elaborar oficios de respuesta al MTOP
+Supervisor -> Supervisor : Revisar coordinación (oficio máxima autoridad)
+Supervisor -> Supervisor : Revisión director de vialidad
+Supervisor -> Supervisor : Revisión y firma Prefecta
+Herramienta -> BD : Guardar informe final
+Herramienta -> MTOP : Enviar respuesta al MTOP
+note right
+  El trámite se cierra cuando
+  se envía al MTOP (cierre del trámite)
+end note
+Herramienta -> TecGeo : Notificar cierre
+Herramienta -> Supervisor : Informe final
+
+@enduml
+
