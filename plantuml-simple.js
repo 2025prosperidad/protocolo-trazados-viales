@@ -690,7 +690,7 @@ Herramienta -> TecGeo : Notificar cierre
 Herramienta -> Supervisor : Informe final
 
 @enduml`,
-  
+
   'diagram-casos-uso': String.raw`@startuml
 !pragma charset UTF-8
 skinparam defaultFontName Arial
@@ -783,12 +783,10 @@ skinparam defaultFontName Arial
 title Diagrama de Secuencia - Creación y Gestión de Trámite
 
 actor "Ciudadano" as C
-participant "Portal Web" as P
-participant "Ventanilla" as V
-participant "AppSheet" as A
-participant "Apps Script" as AS
-participant "Google Sheets" as GS
-participant "Google Drive" as GD
+actor "Ventanilla" as V
+participant "Herramienta" as H
+participant "Motor de Asignación" as MA
+database "Expediente Digital" as BD
 actor "Técnico" as T
 actor "Supervisor" as S
 
@@ -796,77 +794,65 @@ actor "Supervisor" as S
 C -> V : Entrega solicitud y documentos
 activate V
 V -> V : Valida requisitos
-V -> P : Registra trámite
-activate P
-P -> A : Crea nuevo trámite
-activate A
-A -> GS : INSERT tramite
-activate GS
-GS --> A : ID generado
-deactivate GS
-A -> GD : Crea carpeta expediente
-activate GD
-GD --> A : URL carpeta
-deactivate GD
-A --> P : Trámite creado
-deactivate A
-P --> V : Confirmación
-deactivate P
+V -> H : Registra trámite
+activate H
+H -> BD : Crear expediente digital
+activate BD
+BD --> H : Expediente creado con ID único
+deactivate BD
+H --> V : Confirmación de registro
 V --> C : Entrega número de expediente
 deactivate V
 
 == Asignación Automática ==
-A -> AS : Trigger: Nuevo trámite
-activate AS
-AS -> GS : Consulta técnicos disponibles
-activate GS
-GS --> AS : Lista técnicos
-deactivate GS
-AS -> AS : Algoritmo Round-Robin
-AS -> GS : UPDATE asignar técnico
-activate GS
-GS --> AS : OK
-deactivate GS
-AS -> A : Notificar asignación
-deactivate AS
+H -> MA : Solicitar asignación de responsable
+activate MA
+MA -> MA : Consulta grupo de técnicos según perfil
+MA -> MA : Aplica algoritmo Round-Robin
+MA -> H : Asignar técnico seleccionado
+deactivate MA
+H -> BD : Registrar asignación
+activate BD
+BD --> H : OK
+deactivate BD
 
 == Notificaciones ==
-A -> T : Email/WhatsApp: Nuevo trámite asignado
-A -> S : Notifica panel supervisor
-A -> C : SMS: Trámite registrado
+H -> T : Notificar nuevo trámite asignado
+H -> S : Notificar asignación en panel
+H -> C : Confirmar recepción de trámite
 
 == Gestión de Fase ==
-T -> A : Accede a trámite
-activate A
-A -> GS : SELECT tramite + documentos
-activate GS
-GS --> A : Datos
-deactivate GS
-A --> T : Muestra expediente
+T -> H : Accede a trámite asignado
+activate H
+H -> BD : Consultar datos y documentos
+activate BD
+BD --> H : Información del expediente
+deactivate BD
+H --> T : Muestra expediente completo
+deactivate H
 T -> T : Realiza análisis técnico
-T -> A : Carga informe
-A -> GD : Sube archivo
-activate GD
-GD --> A : URL archivo
-deactivate GD
-A -> GS : UPDATE fase completada
-activate GS
-GS --> A : OK
-deactivate GS
+T -> H : Carga informe y entregables
+activate H
+H -> BD : Almacenar documentos
+activate BD
+BD --> H : Documentos guardados
+deactivate BD
+H -> BD : Actualizar estado de fase
+activate BD
+BD --> H : Fase completada
+deactivate BD
 
 == Transición de Fase ==
-A -> AS : Trigger: Fase completada
-activate AS
-AS -> GS : Identifica siguiente fase
-activate GS
-GS --> AS : Siguiente fase
-deactivate GS
-AS -> GS : Asigna nuevo técnico
-AS -> A : Nueva asignación
-deactivate AS
-A -> T : Notifica nuevo técnico
-A -> S : Actualiza dashboard
-deactivate A
+H -> MA : Solicitar asignación siguiente fase
+activate MA
+MA -> MA : Identificar siguiente fase del trámite
+MA -> MA : Seleccionar técnico según perfil requerido
+MA -> H : Asignar nueva fase a técnico
+deactivate MA
+H -> BD : Registrar nueva asignación
+H -> T : Notificar nueva asignación
+H -> S : Actualizar seguimiento
+deactivate H
 
 @enduml`,
 

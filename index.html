@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="description"
-        content="Documentación Técnica de la Plataforma de Trazados Viales - GADPP. Desarrollado con Google AppSheet y Apps Script">
-    <meta name="keywords" content="Trazados Viales, GADPP, AppSheet, Google Cloud, Pichincha, Gestión de Trámites">
+        content="Documentación Técnica de la Plataforma de Trazados Viales - GADPP. Sistema de gestión integral de trámites viales">
+    <meta name="keywords" content="Trazados Viales, GADPP, Gestión de Trámites, Pichincha, Sistema de Gestión">
     <meta name="author" content="Infinity Solutions RII Cia. Ltda.">
     <meta name="theme-color" content="#2563eb">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Protocolo Trazados Viales - GADPP | AppSheet Platform</title>
+    <title>Protocolo Trazados Viales - GADPP | Sistema de Gestión</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -179,7 +179,7 @@
                             <td>V 2.0</td>
                             <td>14-10-2025</td>
                             <td>Infinity Solutions RII Cia. Ltda.</td>
-                            <td>Actualización completa con arquitectura AppSheet y Google Cloud.</td>
+                            <td>Actualización completa con arquitectura del sistema y diagramas UML detallados.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -252,9 +252,10 @@
                     <h3>4.2 Diagrama de Secuencia</h3>
                     <p class="text-content">
                         El siguiente diagrama ilustra la secuencia cronológica de interacciones implementada para la
-                        creación y gestión de un trámite. Muestra cómo los componentes del sistema (Portal Web, AppSheet,
-                        Apps Script, Google Sheets, Google Drive) se comunican entre sí para ejecutar las operaciones,
-                        desde el registro inicial hasta la transición entre fases.
+                        creación y gestión de un trámite. Muestra cómo los diferentes componentes del sistema
+                        (Herramienta, Motor de Asignación, Expediente Digital) se comunican entre sí para ejecutar
+                        las operaciones, desde el registro inicial hasta la transición entre fases, incluyendo la
+                        asignación automática mediante algoritmo Round-Robin y las notificaciones a los actores.
                     </p>
 
                     <div class="diagram-container">
@@ -267,7 +268,8 @@
                 <div id="clases" class="subsection">
                     <h3>4.3 Modelo de Datos (Diagrama de Clases)</h3>
                     <p class="text-content">
-                        El modelo de datos implementado para la gestión de trámites se define a continuación. La estructura,
+                        El modelo de datos implementado para la gestión de trámites se define a continuación. La
+                        estructura,
                         centrada en la entidad <strong>Trámite</strong>, garantiza la integridad referencial y la
                         escalabilidad del sistema. Incluye las clases principales (Ciudadano, Técnico, Fase, Documento,
                         Notificación, Derivación, etc.) y sus relaciones.
@@ -610,7 +612,7 @@
                             <ul>
                                 <li><strong>Presencial:</strong> El ciudadano entrega en Ventanilla y el analista
                                     registra</li>
-                                <li><strong>Digital:</strong> El ciudadano carga documentos en el portal web</li>
+                                <li><strong>Digital:</strong> El ciudadano carga documentos en la plataforma</li>
                             </ul>
                         </div>
                     </div>
@@ -865,6 +867,14 @@
                     La solución se ha desarrollado sobre una arquitectura de tres capas, desacoplada y orientada a
                     servicios, garantizando escalabilidad, mantenibilidad y seguridad.
                 </p>
+                
+                <div class="info-box" style="background: #f0f9ff; border-left: 4px solid #2563eb; padding: 1rem; margin: 1.5rem 0;">
+                    <p style="margin: 0; color: #1e40af;">
+                        <strong>📌 Nota:</strong> Los diagramas UML de este documento representan el modelo conceptual del sistema
+                        (Herramienta, Motor de Asignación, Expediente Digital). La siguiente tabla muestra las tecnologías
+                        específicas utilizadas para implementar estos componentes conceptuales.
+                    </p>
+                </div>
 
                 <table class="arch-table">
                     <thead>
@@ -941,9 +951,9 @@
         const script = document.createElement('script');
         script.src = 'plantuml-simple.js?v=' + new Date().getTime();
         document.head.appendChild(script);
-        
+
         // Cargar automáticamente los diagramas de la sección de Modelado UML
-        script.onload = function() {
+        script.onload = function () {
             // Esperar un momento para asegurar que todo esté listo
             setTimeout(() => {
                 if (typeof loadAndRenderDiagram === 'function') {
