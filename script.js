@@ -23,6 +23,38 @@ themeToggle.addEventListener('click', () => {
     updateThemeIcon(newTheme);
 });
 
+// ==================== Sidebar Toggle ====================
+const sidebarToggle = document.getElementById('sidebarToggle');
+let sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+
+// Apply saved state
+if (sidebarCollapsed) {
+    document.body.classList.add('sidebar-collapsed');
+}
+
+sidebarToggle.addEventListener('click', () => {
+    sidebarCollapsed = !sidebarCollapsed;
+    document.body.classList.toggle('sidebar-collapsed');
+    localStorage.setItem('sidebarCollapsed', sidebarCollapsed);
+});
+
+// ==================== Hide Names Toggle ====================
+const hideNamesToggle = document.getElementById('hideNamesToggle');
+let hideNames = localStorage.getItem('hideNames') === 'true';
+
+// Apply saved state
+if (hideNames) {
+    hideNamesToggle.checked = true;
+}
+
+hideNamesToggle.addEventListener('change', () => {
+    hideNames = hideNamesToggle.checked;
+    localStorage.setItem('hideNames', hideNames);
+    
+    // Refresh all diagrams
+    window.reloadAllDiagrams();
+});
+
 // ==================== Mobile Menu Toggle ====================
 const menuToggle = document.getElementById('menuToggle');
 const sidebar = document.getElementById('sidebar');
@@ -387,11 +419,113 @@ document.querySelector('.header-actions').insertBefore(
     document.getElementById('themeToggle')
 );
 
+// ==================== Diagram Zoom & Fullscreen ====================
+// Agregar controles a cada diagrama después de que se carguen
+window.addEventListener('load', () => {
+    const diagrams = document.querySelectorAll('.diagram-container');
+    
+    diagrams.forEach(diagram => {
+        const header = diagram.querySelector('.diagram-header');
+        if (!header) return;
+        
+        // Crear contenedor de controles
+        const controls = document.createElement('div');
+        controls.className = 'diagram-controls';
+        
+        // Botón de pantalla completa
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'btn-fullscreen';
+        fullscreenBtn.innerHTML = '🔍 Pantalla completa';
+        fullscreenBtn.onclick = () => toggleFullscreen(diagram);
+        
+        // Botón de zoom in
+        const zoomInBtn = document.createElement('button');
+        zoomInBtn.className = 'btn-zoom-in';
+        zoomInBtn.innerHTML = '🔎+';
+        zoomInBtn.onclick = () => zoomDiagram(diagram, 'in');
+        
+        // Botón de zoom out
+        const zoomOutBtn = document.createElement('button');
+        zoomOutBtn.className = 'btn-zoom-out';
+        zoomOutBtn.innerHTML = '🔎−';
+        zoomOutBtn.onclick = () => zoomDiagram(diagram, 'out');
+        
+        controls.appendChild(zoomInBtn);
+        controls.appendChild(zoomOutBtn);
+        controls.appendChild(fullscreenBtn);
+        
+        // Reemplazar botón "Ver Diagrama" por controles
+        const oldButton = header.querySelector('.btn-expand');
+        if (oldButton) {
+            const newExpandBtn = document.createElement('button');
+            newExpandBtn.className = 'btn-expand';
+            newExpandBtn.textContent = oldButton.textContent;
+            newExpandBtn.onclick = oldButton.onclick;
+            
+            header.innerHTML = '';
+            header.appendChild(document.createElement('h5')).textContent = diagram.querySelector('.diagram-header h5')?.textContent || 'Diagrama';
+            
+            const actionsDiv = document.createElement('div');
+            actionsDiv.style.display = 'flex';
+            actionsDiv.style.gap = '0.5rem';
+            actionsDiv.appendChild(controls);
+            actionsDiv.appendChild(newExpandBtn);
+            
+            header.appendChild(actionsDiv);
+        }
+    });
+});
+
+function toggleFullscreen(diagram) {
+    diagram.classList.toggle('fullscreen');
+    const btn = diagram.querySelector('.btn-fullscreen');
+    if (diagram.classList.contains('fullscreen')) {
+        btn.innerHTML = '✕ Cerrar';
+        // Permitir cerrar con ESC
+        const closeHandler = (e) => {
+            if (e.key === 'Escape') {
+                diagram.classList.remove('fullscreen');
+                btn.innerHTML = '🔍 Pantalla completa';
+                document.removeEventListener('keydown', closeHandler);
+            }
+        };
+        document.addEventListener('keydown', closeHandler);
+    } else {
+        btn.innerHTML = '🔍 Pantalla completa';
+    }
+}
+
+function zoomDiagram(diagram, direction) {
+    const content = diagram.querySelector('.diagram-content');
+    content.classList.remove('zoomed-in', 'zoomed-out');
+    
+    if (direction === 'in') {
+        content.classList.add('zoomed-in');
+    } else if (direction === 'out') {
+        content.classList.add('zoomed-out');
+    }
+    
+    // Reset después de 3 segundos
+    setTimeout(() => {
+        content.classList.remove('zoomed-in', 'zoomed-out');
+    }, 3000);
+}
+
+// ==================== Reload Diagrams with/without Names ====================
+window.reloadAllDiagrams = function() {
+    // Esta función será llamada desde plantuml-simple.js
+    // para recargar diagramas con nombres ocultos
+    if (typeof window.renderAllDiagrams === 'function') {
+        window.renderAllDiagrams();
+    }
+};
+
 // ==================== Initialize ====================
 document.addEventListener('DOMContentLoaded', () => {
     console.log('📐 Protocolo Trazados Viales - Web Documentation');
-    console.log('Version: 2.0');
+    console.log('Version: 2.1');
     console.log('Developed by: Infinity Solutions RII Cia. Ltda.');
+    console.log('✨ Nuevas características: Sidebar colapsable, Ocultar nombres, Zoom, Pantalla completa');
 
     // Initial active nav update
     updateActiveNav();

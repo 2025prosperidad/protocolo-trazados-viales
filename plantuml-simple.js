@@ -696,8 +696,24 @@ function loadAndRenderDiagram(containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  const code = diagramCodes[containerId];
+  let code = diagramCodes[containerId];
   if (!code) return;
+
+  // Ocultar nombres si el toggle está activado
+  const hideNames = localStorage.getItem('hideNames') === 'true';
+  if (hideNames) {
+    // Eliminar líneas que contienen nombres de técnicos (note over con nombres)
+    code = code.split('\n').filter(line => {
+      const trimmedLine = line.trim();
+      // Mantener todas las líneas excepto las que sean "note over" con nombres de personas
+      if (trimmedLine.startsWith('note over') && !trimmedLine.includes('días')) {
+        // Verificar si contiene nombres comunes de los técnicos
+        const hasNames = /Katy|Alicia|Fernanda|Cristian|Romario|Cristina|Marcelo|Irene|Carla|Nicole|Santiago|Evelyn|Edison|Jairo/i.test(trimmedLine);
+        return !hasNames;
+      }
+      return true;
+    }).join('\n');
+  }
 
   try {
     container.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text-secondary)"><div style="font-size:2rem">⏳</div><p>Cargando...</p></div>';
@@ -883,6 +899,17 @@ window.expandDiagram = function (diagramId) {
     diagram.classList.add('hidden');
     if (button) button.textContent = 'Ver Diagrama';
   }
+};
+
+// Función global para recargar todos los diagramas
+window.renderAllDiagrams = function() {
+  console.log('🔄 Recargando todos los diagramas...');
+  Object.keys(diagramCodes).forEach(diagramId => {
+    const container = document.getElementById(diagramId);
+    if (container && !container.classList.contains('hidden')) {
+      loadAndRenderDiagram(diagramId);
+    }
+  });
 };
 
 console.log('📊 PlantUML Simple Renderer cargado');
