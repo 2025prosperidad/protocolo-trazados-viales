@@ -234,8 +234,7 @@ Tecnico -> Tecnico : Completar análisis técnico
   'diagram-trazado-vial': String.raw`@startuml
 !pragma charset UTF-8
 skinparam defaultFontName Arial
-title Flujo del Trámite de Trazado Vial
-subtitle Duración total estimada: 162 días
+title Flujo del Trámite de Trazado Vial (162 días)
 
 actor "Ciudadano" as Ciudadano
 actor "Ventanilla" as Ventanilla
@@ -330,8 +329,7 @@ Herramienta -> Supervisor : Informe final
   'diagram-certificacion-vial': String.raw`@startuml
 !pragma charset UTF-8
 skinparam defaultFontName Arial
-title Flujo del Trámite de Certificación Vial
-subtitle Duración total estimada: 24 días
+title Flujo del Trámite de Certificación Vial (24 días)
 
 actor "Ciudadano" as Ciudadano
 actor "Ventanilla" as Ventanilla
@@ -391,8 +389,7 @@ Herramienta -> Supervisor : Informe final
   'diagram-replanteo-vial': String.raw`@startuml
 !pragma charset UTF-8
 skinparam defaultFontName Arial
-title Flujo del Trámite de Replanteo Vial
-subtitle Duración total estimada: 30 días
+title Flujo del Trámite de Replanteo Vial (30 días)
 
 actor "Ciudadano" as Ciudadano
 actor "Ventanilla" as Ventanilla
@@ -457,8 +454,7 @@ Herramienta -> Supervisor : Informe final
   'diagram-secciones-transversales': String.raw`@startuml
 !pragma charset UTF-8
 skinparam defaultFontName Arial
-title Flujo del Trámite de Secciones Transversales
-subtitle Duración total estimada: 30 días
+title Flujo del Trámite de Secciones Transversales (30 días)
 
 actor "Ciudadano" as Ciudadano
 actor "Ventanilla" as Ventanilla
@@ -513,8 +509,7 @@ Herramienta -> Supervisor : Informe final
   'diagram-colocacion-eje': String.raw`@startuml
 !pragma charset UTF-8
 skinparam defaultFontName Arial
-title Flujo del Trámite de Colocación de Eje Vial
-subtitle Duración total estimada: 30 días
+title Flujo del Trámite de Colocación de Eje Vial (30 días)
 
 actor "Ciudadano" as Ciudadano
 actor "Ventanilla" as Ventanilla
@@ -581,8 +576,7 @@ Herramienta -> Supervisor : Informe final
   'diagram-colocacion-infraestructura': String.raw`@startuml
 !pragma charset UTF-8
 skinparam defaultFontName Arial
-title Flujo del Trámite de Colocación de Infraestructura
-subtitle Duración total estimada: 35 días
+title Flujo del Trámite de Colocación de Infraestructura (35 días)
 
 actor "Ciudadano" as Ciudadano
 actor "Ventanilla" as Ventanilla
@@ -638,8 +632,7 @@ Herramienta -> Supervisor : Informe final
   'diagram-declaratoria-camino': String.raw`@startuml
 !pragma charset UTF-8
 skinparam defaultFontName Arial
-title Flujo del Trámite de Declaratoria de Camino Público
-subtitle Duración total estimada: 60 días
+title Flujo del Trámite de Declaratoria de Camino Público (60 días)
 
 actor "Ciudadano" as Ciudadano
 actor "Ventanilla" as Ventanilla
