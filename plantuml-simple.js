@@ -237,107 +237,94 @@ skinparam defaultFontName Arial
 title Flujo del Trámite de Trazado Vial
 subtitle Duración total estimada: 162 días
 
-start
+actor "Ciudadano" as Ciudadano
+actor "Ventanilla" as Ventanilla
+participant "Herramienta" as Herramienta
+actor "Téc. Geógrafo" as TecGeo
+actor "Téc. Arquitecto" as TecArq
+actor "Téc. Topógrafo" as TecTopo
+actor "Téc. Ing. Civil" as TecCivil
+actor "Supervisor" as Supervisor
+database "BD" as BD
 
-group REGISTRO DE TRÁMITE Y ASIGNACIÓN
-  :Ciudadano entrega solicitud y requisitos;
-  :Ventanilla registra trámite;
-  :Herramienta asigna fase de competencia;
-end group
+== REGISTRO ==
+Ciudadano -> Ventanilla : Entrega solicitud
+Ventanilla -> Herramienta : Registrar trámite
+Herramienta -> TecGeo : Asignar fase competencia
 
-group FASE 1: COMPETENCIA (8 días)
-  partition "Técnico Geógrafo\n(Katy, Alicia, Fernanda)" as TecGeo {
-    :Verificar competencia;
-    if (Es competente?) then (Sí)
-      :Revisar requisitos completos;
-      if (Requisitos completos?) then (Sí)
-        :Elaborar mapa de competencia;
-        :Guardar mapa en BD;
-      else (No)
-        :Solicitar información al ciudadano;
-        :Ventanilla registra información;
-      end if
-    else (No)
-      :Elaborar informe de no competencia;
-      :Supervisor revisa informe;
-      :Aprobar y finalizar en BD;
-      :Notificar no competencia al ciudadano;
-    end if
-  }
-end group
+== FASE 1: COMPETENCIA (8 días) ==
+note over TecGeo: Katy, Alicia, Fernanda
+TecGeo -> TecGeo : Verificar competencia
 
-group FASE 2: INFORME DE PERTINENCIA (25 días)
-  partition "Técnico Arquitecto\n(Irene, Carla, Nicole, Santiago, Evelyn, Marcelo)" as TecArq {
-    :Asignar fase de pertinencia;
-    :Analizar pertinencia;
-    if (Requiere información?) then (Sí)
-      :Solicitar información a terceros;
-      :Recibir información;
-    end if
-    if (Es pertinente?) then (Sí)
-      :Elaborar informe de pertinencia;
-      :Elaborar mapa de pertinencia;
-      :Supervisor revisa documentos;
-      :Aprobar fase en BD;
-    else (No)
-      :Elaborar informe de no pertinencia;
-      :Supervisor revisa y aprueba;
-      :Finalizar trámite en BD;
-      :Notificar resultado al ciudadano;
-    end if
-  }
-end group
+alt Es competente
+  TecGeo -> TecGeo : Revisar requisitos
+  alt Completos
+    TecGeo -> BD : Elaborar y guardar mapa
+  else Incompletos
+    TecGeo -> Ciudadano : Solicitar información
+    Ciudadano -> Ventanilla : Entregar información
+  end
+else No competente
+  TecGeo -> Supervisor : Informe no competencia
+  Supervisor -> BD : Aprobar y finalizar
+  Herramienta -> Ciudadano : Notificar cierre
+end
 
-group FASE 3: TOPOGRAFÍA (67 días)
-  partition "Técnico Topógrafo\n(Edison, Jairo)" as TecTopo {
-    :Asignar fase de topografía;
-    :Revisar información;
-    if (Cuenta con topografía?) then (Sí)
-      :Validar topografía;
-    else (No)
-      :Inspección de la vía;
-      :Posicionamiento puntos GPS;
-      :Levantamiento topográfico;
-    end if
-    :Elaborar informe topográfico y dibujo;
-    :Supervisor revisa informe;
-    :Aprobar fase en BD;
-  }
-end group
+== FASE 2: INFORME PERTINENCIA (25 días) ==
+note over TecArq: Irene, Carla, Nicole,\nSantiago, Evelyn, Marcelo
+Herramienta -> TecArq : Asignar fase
 
-group FASE 4: DISEÑO GEOMÉTRICO (30 días)
-  partition "Técnico Ing. Civil\n(Cristian, Romario, Cristina)" as TecCivil {
-    :Asignar fase de diseño;
-    :Elaborar diseño geométrico;
-    :Elaborar informe y planos;
-    :Supervisor revisa diseño;
-    :Aprobar fase en BD;
-  }
-end group
+TecArq -> TecArq : Analizar pertinencia
 
-group FASE 5: INFORME DE TRAZADO VIAL (7 días)
-  partition "Técnico Ing. Civil\n(Cristian, Romario, Cristina)" as TecCivil {
-    :Elaborar informe de trazado vial;
-    :Cargar informe;
-    :Supervisor revisa informe;
-    :Aprobar fase en BD;
-  }
-end group
+opt Requiere información
+  TecArq -> Herramienta : Solicitar info terceros
+end
 
-group FASE 6: RESOLUCIONES Y OFICIOS (25 días)
-  partition "Técnico Ing. Civil\n(Cristian, Romario, Cristina)" as TecCivil {
-    :Elaborar resolución;
-    :Revisión técnica previa (Supervisor);
-    :Revisión coordinación (Supervisor);
-    :Revisión y firma director (Supervisor);
-    :Guardar resolución final en BD;
-    :Enviar resolución al ciudadano;
-    :Notificar cierre al Técnico Ing. Civil;
-    :Informe final al Supervisor;
-  }
-end group
+alt Es pertinente
+  TecArq -> BD : Elaborar informes y mapas
+  Supervisor -> BD : Aprobar fase
+else No pertinente
+  TecArq -> Supervisor : Informe no pertinencia
+  Supervisor -> BD : Finalizar trámite
+  Herramienta -> Ciudadano : Notificar resultado
+end
 
-stop
+== FASE 3: TOPOGRAFÍA (67 días) ==
+note over TecTopo: Edison, Jairo
+Herramienta -> TecTopo : Asignar fase
+
+alt Cuenta con topografía
+  TecTopo -> TecTopo : Validar topografía
+else No cuenta
+  TecTopo -> TecTopo : Inspección vía
+  TecTopo -> TecTopo : Posicionamiento GPS
+  TecTopo -> TecTopo : Levantamiento topográfico
+end
+
+TecTopo -> BD : Elaborar informe y dibujo
+Supervisor -> BD : Aprobar fase
+
+== FASE 4: DISEÑO GEOMÉTRICO (30 días) ==
+note over TecCivil: Cristian, Romario, Cristina
+Herramienta -> TecCivil : Asignar fase
+
+TecCivil -> TecCivil : Elaborar diseño
+TecCivil -> BD : Elaborar informe y planos
+Supervisor -> BD : Aprobar fase
+
+== FASE 5: INFORME TRAZADO VIAL (7 días) ==
+TecCivil -> TecCivil : Elaborar informe
+TecCivil -> BD : Cargar informe
+Supervisor -> BD : Aprobar fase
+
+== FASE 6: RESOLUCIONES Y OFICIOS (25 días) ==
+TecCivil -> BD : Elaborar resolución
+Supervisor -> Supervisor : Revisión técnica
+Supervisor -> Supervisor : Revisión coordinación
+Supervisor -> Supervisor : Revisión y firma director
+BD -> Ciudadano : Enviar resolución
+Herramienta -> TecCivil : Notificar cierre
+Herramienta -> Supervisor : Informe final
 
 @enduml`,
   'diagram-certificacion-vial': String.raw`@startuml
@@ -346,65 +333,59 @@ skinparam defaultFontName Arial
 title Flujo del Trámite de Certificación Vial
 subtitle Duración total estimada: 24 días
 
-start
+actor "Ciudadano" as Ciudadano
+actor "Ventanilla" as Ventanilla
+participant "Herramienta" as Herramienta
+actor "Téc. Ing. Civil" as TecCivil
+actor "Téc. Geógrafo" as TecGeo
+actor "Supervisor" as Supervisor
+database "BD" as BD
 
-group REGISTRO DE TRÁMITE Y ASIGNACIÓN
-  :Ciudadano entrega solicitud y requisitos;
-  :Ventanilla registra trámite;
-  :Herramienta asigna fase de competencia;
-end group
+== REGISTRO ==
+Ciudadano -> Ventanilla : Entrega solicitud
+Ventanilla -> Herramienta : Registrar trámite
+Herramienta -> TecCivil : Asignar fase competencia
 
-group FASE 1: COMPETENCIA (4 días)
-  partition "Técnico Ing. Civil\n(Cristian, Romario, Cristina)" as TecCivil {
-    :Verificar competencia;
-    if (Es competente?) then (Sí)
-      :Revisar requisitos completos;
-      if (Requisitos completos?) then (Sí)
-        :Continuar a siguiente fase;
-      else (No)
-        :Solicitar información al ciudadano;
-        :Ventanilla registra información;
-      end if
-    else (No)
-      :Elaborar respuesta de no competencia;
-      :Supervisor revisa respuesta;
-      :Revisar y firmar director (Supervisor);
-      :Guardar respuesta en BD;
-      :Notificar no competencia al ciudadano;
-    end if
-  }
-end group
+== FASE 1: COMPETENCIA (4 días) ==
+note over TecCivil: Cristian, Romario, Cristina
+TecCivil -> TecCivil : Verificar competencia
 
-group FASE 2: VERIFICACIÓN DE APROBACIÓN (5 días)
-  partition "Técnico Geógrafo\n(Katty, Marcelo)" as TecGeo {
-    :Asignar fase de verificación;
-    :Analizar y verificar pertinencia;
-    :Verificar aprobaciones de vías;
-    if (Requiere información adicional?) then (Sí)
-      :Solicitar información al ciudadano;
-      :Ventanilla registra información;
-      :Revisar oficio (Supervisor);
-      :Revisar y firmar director (Supervisor);
-    end if
-    :Completar verificación;
-    :Guardar verificación en BD;
-  }
-end group
+alt Es competente
+  TecCivil -> TecCivil : Revisar requisitos
+  opt Incompletos
+    TecCivil -> Ciudadano : Solicitar información
+    Ciudadano -> Ventanilla : Entregar información
+  end
+else No competente
+  TecCivil -> Supervisor : Respuesta no competencia
+  Supervisor -> Supervisor : Revisar y firmar
+  BD -> Ciudadano : Notificar no competencia
+end
 
-group FASE 3: INFORME DE CERTIFICACIÓN (15 días)
-  partition "Técnico Geógrafo\n(Katty, Marcelo)" as TecGeo {
-    :Elaborar informe de certificación vial;
-    :Supervisor revisa informe;
-    :Revisar coordinación (Supervisor);
-    :Revisar y firmar director (Supervisor);
-    :Guardar certificación final en BD;
-    :Enviar certificación vial al ciudadano;
-    :Notificar cierre al Técnico Geógrafo;
-    :Informe final al Supervisor;
-  }
-end group
+== FASE 2: VERIFICACIÓN APROBACIÓN (5 días) ==
+note over TecGeo: Katty, Marcelo
+Herramienta -> TecGeo : Asignar fase
 
-stop
+TecGeo -> TecGeo : Analizar y verificar
+TecGeo -> TecGeo : Verificar aprobaciones vías
+
+opt Requiere información
+  TecGeo -> Ciudadano : Solicitar información
+  Ciudadano -> Ventanilla : Entregar información
+  Supervisor -> Supervisor : Revisar oficio
+  Supervisor -> Supervisor : Firmar director
+end
+
+TecGeo -> BD : Completar verificación
+
+== FASE 3: INFORME CERTIFICACIÓN (15 días) ==
+TecGeo -> BD : Elaborar informe certificación
+Supervisor -> Supervisor : Revisar informe
+Supervisor -> Supervisor : Revisar coordinación
+Supervisor -> Supervisor : Firma director
+BD -> Ciudadano : Enviar certificación vial
+Herramienta -> TecGeo : Notificar cierre
+Herramienta -> Supervisor : Informe final
 
 @enduml`,
   'diagram-replanteo-vial': String.raw`@startuml
@@ -413,67 +394,64 @@ skinparam defaultFontName Arial
 title Flujo del Trámite de Replanteo Vial
 subtitle Duración total estimada: 30 días
 
-start
+actor "Ciudadano" as Ciudadano
+actor "Ventanilla" as Ventanilla
+participant "Herramienta" as Herramienta
+actor "Téc. Arquitecto" as TecArq
+actor "Téc. Geógrafo" as TecGeo
+actor "Supervisor" as Supervisor
+database "BD" as BD
 
-group REGISTRO DE TRÁMITE Y ASIGNACIÓN
-  :Ciudadano entrega solicitud y requisitos;
-  :Ventanilla registra trámite;
-  :Herramienta asigna fase de competencia;
-end group
+== REGISTRO ==
+Ciudadano -> Ventanilla : Entrega solicitud
+Ventanilla -> Herramienta : Registrar trámite
+Herramienta -> TecArq : Asignar fase competencia
 
-group FASE 1: COMPETENCIA (4 días)
-  partition "Técnico Arquitecto\n(Arquitectos + Geógrafo)" as TecArq {
-    :Verificar competencia;
-    if (Es competente?) then (Sí)
-      :Revisar requisitos completos;
-      if (Requisitos completos?) then (Sí)
-        :Continuar a siguiente fase;
-      else (No)
-        :Solicitar información al ciudadano;
-        :Ventanilla registra información;
-      end if
-    else (No)
-      :Elaborar respuesta de no competencia;
-      :Supervisor revisa respuesta;
-      :Revisar y firmar director (Supervisor);
-      :Guardar respuesta en BD;
-      :Notificar no competencia al ciudadano;
-    end if
-  }
-end group
+== FASE 1: COMPETENCIA (4 días) ==
+note over TecArq: Arquitectos + Geógrafo
+TecArq -> TecArq : Verificar competencia
 
-group FASE 2: VERIFICACIÓN DE APROBACIÓN (6 días)
-  partition "Técnico Arquitecto\n(Irene, Carla, Nicole, Santiago, Evelyn, Marcelo)" as TecArq {
-    :Asignar fase de verificación;
-    :Verificar información;
-    if (Existen planos por digitalizar?) then (Sí)
-      :Digitalización de planos escaneados;
-    end if
-    :Analizar y verificar pertinencia;
-    :Verificar vías aprobadas;
-    if (Requiere inspección?) then (Sí)
-      :Inspección en territorio;
-    end if
-    :Guardar verificación en BD;
-  }
-end group
+alt Es competente
+  TecArq -> TecArq : Revisar requisitos
+  opt Incompletos
+    TecArq -> Ciudadano : Solicitar información
+    Ciudadano -> Ventanilla : Entregar información
+  end
+else No competente
+  TecArq -> Supervisor : Respuesta no competencia
+  Supervisor -> Supervisor : Revisar y firmar
+  BD -> Ciudadano : Notificar no competencia
+end
 
-group FASE 3: INFORME DE REPLANTEO (17 días)
-  partition "Técnico Geógrafo\n(Irene, Carla, Nicole, Santiago, Evelyn, Marcelo)" as TecGeo {
-    :Asignar elaboración de informe;
-    :Elaborar informe de replanteo vial;
-    :Supervisor revisa informe;
-    :Revisar coordinación (Supervisor);
-    :Elaborar oficio para usuario;
-    :Revisar y firmar director (Supervisor);
-    :Guardar informe final en BD;
-    :Enviar respuesta de replanteo vial al ciudadano;
-    :Notificar cierre al Técnico Geógrafo;
-    :Informe final al Supervisor;
-  }
-end group
+== FASE 2: VERIFICACIÓN APROBACIÓN (6 días) ==
+note over TecArq: Irene, Carla, Nicole,\nSantiago, Evelyn, Marcelo
+Herramienta -> TecArq : Asignar fase
 
-stop
+TecArq -> TecArq : Verificar información
+
+opt Planos por digitalizar
+  TecArq -> TecArq : Digitalización planos
+end
+
+TecArq -> TecArq : Verificar pertinencia
+TecArq -> TecArq : Verificar vías aprobadas
+
+opt Requiere inspección
+  TecArq -> TecArq : Inspección en territorio
+end
+
+TecArq -> BD : Guardar verificación
+
+== FASE 3: INFORME REPLANTEO (17 días) ==
+Herramienta -> TecGeo : Asignar elaboración informe
+TecGeo -> BD : Elaborar informe replanteo
+Supervisor -> Supervisor : Revisar informe
+Supervisor -> Supervisor : Revisar coordinación
+TecGeo -> BD : Elaborar oficio usuario
+Supervisor -> Supervisor : Firma director
+BD -> Ciudadano : Enviar respuesta replanteo
+Herramienta -> TecGeo : Notificar cierre
+Herramienta -> Supervisor : Informe final
 
 @enduml`,
   'diagram-secciones-transversales': String.raw`@startuml
@@ -482,66 +460,54 @@ skinparam defaultFontName Arial
 title Flujo del Trámite de Secciones Transversales
 subtitle Duración total estimada: 30 días
 
-start
+actor "Ciudadano" as Ciudadano
+actor "Ventanilla" as Ventanilla
+participant "Herramienta" as Herramienta
+actor "Téc. Geógrafo" as TecGeo
+actor "Supervisor" as Supervisor
+database "BD" as BD
 
-group REGISTRO DE TRÁMITE Y ASIGNACIÓN
-  :Ciudadano entrega solicitud y requisitos;
-  :Ventanilla registra trámite;
-  :Herramienta asigna fase de competencia;
-end group
+== REGISTRO ==
+Ciudadano -> Ventanilla : Entrega solicitud
+Ventanilla -> Herramienta : Registrar trámite
+Herramienta -> TecGeo : Asignar fase competencia
 
-group FASE 1: COMPETENCIA (8 días)
-  partition "Técnico Geógrafo\n(Katty, Alicia, Fernanda, Marcelo)" as TecGeo {
-    :Verificar competencia;
-    if (Es competente?) then (Sí)
-      :Revisar requisitos completos;
-      if (Requisitos completos?) then (Sí)
-        :Elaborar mapa de competencia;
-        :Guardar mapa en BD;
-      else (No)
-        :Solicitar información al ciudadano;
-        :Ventanilla registra información;
-      end if
-    else (No)
-      :Elaborar informe de no competencia;
-      :Supervisor revisa informe;
-      :Revisar y firmar director (Supervisor);
-      :Guardar respuesta en BD;
-      :Notificar no competencia al ciudadano;
-    end if
-  }
-end group
+== FASE 1: COMPETENCIA (8 días) ==
+note over TecGeo: Katty, Alicia,\nFernanda, Marcelo
+TecGeo -> TecGeo : Verificar competencia
 
-group FASE 2: VERIFICACIÓN DE APROBACIÓN (2 días)
-  partition "Técnico Geógrafo\n(Katty, Alicia, Fernanda, Marcelo)" as TecGeo {
-    :Asignar fase de verificación;
-    :Verificar información de aprobaciones viales;
-    :Guardar verificación en BD;
-  }
-end group
+alt Es competente
+  TecGeo -> TecGeo : Revisar requisitos
+  alt Completos
+    TecGeo -> BD : Elaborar y guardar mapa
+  else Incompletos
+    TecGeo -> Ciudadano : Solicitar información
+    Ciudadano -> Ventanilla : Entregar información
+  end
+else No competente
+  TecGeo -> Supervisor : Informe no competencia
+  Supervisor -> Supervisor : Revisar y firmar
+  BD -> Ciudadano : Notificar no competencia
+end
 
-group FASE 3: INSPECCIÓN (2 días)
-  partition "Técnico Geógrafo\n(Katty, Alicia, Fernanda, Marcelo)" as TecGeo {
-    :Inspección en territorio;
-    :Registrar inspección en BD;
-  }
-end group
+== FASE 2: VERIFICACIÓN APROBACIÓN (2 días) ==
+Herramienta -> TecGeo : Asignar fase
+TecGeo -> TecGeo : Verificar aprobaciones viales
+TecGeo -> BD : Guardar verificación
 
-group FASE 4: INFORME DE SECCIÓN (18 días)
-  partition "Técnico Geógrafo\n(Katty, Alicia, Fernanda, Marcelo)" as TecGeo {
-    :Elaborar informe de sección transversal;
-    :Supervisor revisa informe;
-    :Revisar coordinación (Supervisor);
-    :Elaborar oficio de respuesta;
-    :Revisar y firmar director (Supervisor);
-    :Guardar informe final en BD;
-    :Enviar informe de secciones transversales al ciudadano;
-    :Notificar cierre al Técnico Geógrafo;
-    :Informe final al Supervisor;
-  }
-end group
+== FASE 3: INSPECCIÓN (2 días) ==
+TecGeo -> TecGeo : Inspección en territorio
+TecGeo -> BD : Registrar inspección
 
-stop
+== FASE 4: INFORME SECCIÓN (18 días) ==
+TecGeo -> BD : Elaborar informe sección
+Supervisor -> Supervisor : Revisar informe
+Supervisor -> Supervisor : Revisar coordinación
+TecGeo -> BD : Elaborar oficio respuesta
+Supervisor -> Supervisor : Firma director
+BD -> Ciudadano : Enviar informe secciones
+Herramienta -> TecGeo : Notificar cierre
+Herramienta -> Supervisor : Informe final
 
 @enduml`,
   'diagram-colocacion-eje': String.raw`@startuml
@@ -550,80 +516,66 @@ skinparam defaultFontName Arial
 title Flujo del Trámite de Colocación de Eje Vial
 subtitle Duración total estimada: 30 días
 
-start
+actor "Ciudadano" as Ciudadano
+actor "Ventanilla" as Ventanilla
+participant "Herramienta" as Herramienta
+actor "Téc. Arquitecto" as TecArq
+actor "Téc. Topógrafo" as TecTopo
+actor "Supervisor" as Supervisor
+database "BD" as BD
 
-group REGISTRO DE TRÁMITE Y ASIGNACIÓN
-  :Ciudadano entrega solicitud y requisitos;
-  :Ventanilla registra trámite;
-  :Herramienta asigna fase de competencia;
-end group
+== REGISTRO ==
+Ciudadano -> Ventanilla : Entrega solicitud
+Ventanilla -> Herramienta : Registrar trámite
+Herramienta -> TecArq : Asignar fase competencia
 
-group FASE 1: COMPETENCIA (3 días)
-  partition "Técnico Arquitecto\n(Irene, Carla, Nicole, Santiago, Evelyn)" as TecArq {
-    :Verificar competencia;
-    if (Es competente?) then (Sí)
-      :Revisar requisitos completos;
-      if (Requisitos completos?) then (Sí)
-        :Continuar a siguiente fase;
-      else (No)
-        :Solicitar información al ciudadano;
-        :Ventanilla registra información;
-      end if
-    else (No)
-      :Elaborar respuesta de no competencia;
-      :Supervisor revisa respuesta;
-      :Revisar y firmar director (Supervisor);
-      :Guardar respuesta en BD;
-      :Notificar no competencia al ciudadano;
-    end if
-  }
-end group
+== FASE 1: COMPETENCIA (3 días) ==
+note over TecArq: Irene, Carla, Nicole,\nSantiago, Evelyn
+TecArq -> TecArq : Verificar competencia
 
-group FASE 2: VERIFICACIÓN DE APROBACIÓN (4 días)
-  partition "Técnico Arquitecto\n(Irene, Carla, Nicole, Santiago, Evelyn)" as TecArq {
-    :Asignar fase de verificación;
-    :Revisar aprobación de la vía;
-    if (Información completa?) then (Sí)
-      :Continuar a siguiente fase;
-    else (No)
-      :Solicitar información al ciudadano;
-    end if
-    :Guardar verificación en BD;
-  }
-end group
+alt Es competente
+  TecArq -> TecArq : Revisar requisitos
+  opt Incompletos
+    TecArq -> Ciudadano : Solicitar información
+    Ciudadano -> Ventanilla : Entregar información
+  end
+else No competente
+  TecArq -> Supervisor : Respuesta no competencia
+  Supervisor -> Supervisor : Revisar y firmar
+  BD -> Ciudadano : Notificar no competencia
+end
 
-group FASE 3: DETERMINACIÓN COORDENADAS EJE (4 días)
-  partition "Técnico Arquitecto\n(Irene, Carla, Nicole, Santiago, Evelyn)" as TecArq {
-    :Elaborar informe previo de colocación;
-    :Supervisor revisa informe previo;
-    :Revisar coordinación (Supervisor);
-    :Guardar informe previo en BD;
-  }
-end group
+== FASE 2: VERIFICACIÓN APROBACIÓN (4 días) ==
+Herramienta -> TecArq : Asignar fase
+TecArq -> TecArq : Revisar aprobación vía
 
-group FASE 4: TRABAJO EN TERRITORIO (7 días)
-  partition "Técnico Topógrafo\n(Edison, Jairo)" as TecTopo {
-    :Asignar colocación física;
-    :Colocación del eje vial;
-    :Registrar colocación en BD;
-  }
-end group
+opt Información incompleta
+  TecArq -> Ciudadano : Solicitar información
+end
 
-group FASE 5: INFORME DE COLOCACIÓN (12 días)
-  partition "Técnico Topógrafo\n(Edison, Jairo)" as TecTopo {
-    :Elaborar informe de colocación de eje vial;
-    :Supervisor revisa informe;
-    :Revisar coordinación (Supervisor);
-    :Elaborar oficios de respuesta;
-    :Revisar y firmar director (Supervisor);
-    :Guardar informe final en BD;
-    :Enviar oficio al usuario;
-    :Notificar cierre al Técnico Topógrafo;
-    :Informe final al Supervisor;
-  }
-end group
+TecArq -> BD : Guardar verificación
 
-stop
+== FASE 3: DETERMINACIÓN COORDENADAS (4 días) ==
+TecArq -> BD : Elaborar informe previo
+Supervisor -> Supervisor : Revisar informe
+Supervisor -> Supervisor : Revisar coordinación
+Supervisor -> BD : Guardar informe previo
+
+== FASE 4: TRABAJO EN TERRITORIO (7 días) ==
+note over TecTopo: Edison, Jairo
+Herramienta -> TecTopo : Asignar colocación
+TecTopo -> TecTopo : Colocación eje vial
+TecTopo -> BD : Registrar colocación
+
+== FASE 5: INFORME COLOCACIÓN (12 días) ==
+TecTopo -> BD : Elaborar informe colocación
+Supervisor -> Supervisor : Revisar informe
+Supervisor -> Supervisor : Revisar coordinación
+TecTopo -> BD : Elaborar oficios respuesta
+Supervisor -> Supervisor : Firma director
+BD -> Ciudadano : Enviar oficio
+Herramienta -> TecTopo : Notificar cierre
+Herramienta -> Supervisor : Informe final
 
 @enduml`,
   'diagram-colocacion-infraestructura': String.raw`@startuml
@@ -632,130 +584,117 @@ skinparam defaultFontName Arial
 title Flujo del Trámite de Colocación de Infraestructura
 subtitle Duración total estimada: 35 días
 
-start
+actor "Ciudadano" as Ciudadano
+actor "Ventanilla" as Ventanilla
+participant "Herramienta" as Herramienta
+actor "Téc. Ing. Civil" as TecCivil
+actor "Ing. Geógrafo" as TecGeo
+actor "Supervisor" as Supervisor
+database "BD" as BD
 
-group REGISTRO DE TRÁMITE Y ASIGNACIÓN
-  :Ciudadano entrega solicitud y requisitos;
-  :Ventanilla registra trámite;
-  :Herramienta asigna fase de competencia;
-end group
+== REGISTRO ==
+Ciudadano -> Ventanilla : Entrega solicitud
+Ventanilla -> Herramienta : Registrar trámite
+Herramienta -> TecCivil : Asignar fase competencia
 
-group FASE 1: COMPETENCIA (3 días)
-  partition "Técnico Ing. Civil\n(Cristian, Romario, Cristina)\nIngeniero Geógrafo (Marcelo)" as TecCivilGeo {
-    :Verificar competencia;
-    if (Es competente?) then (Sí)
-      :Revisar requisitos completos;
-      if (Requisitos completos?) then (Sí)
-        :Continuar a siguiente fase;
-      else (No)
-        :Solicitar información al ciudadano;
-        :Ventanilla registra información;
-      end if
-    else (No)
-      :Elaborar respuesta de no competencia;
-      :Supervisor revisa respuesta;
-      :Revisar y firmar director (Supervisor);
-      :Guardar respuesta en BD;
-      :Notificar no competencia al ciudadano;
-    end if
-  }
-end group
+== FASE 1: COMPETENCIA (3 días) ==
+note over TecCivil, TecGeo: Cristian, Romario,\nCristina, Marcelo
+TecCivil -> TecCivil : Verificar competencia
 
-group FASE 2: VERIFICACIÓN DE FRENTISTAS (20 días)
-  partition "Técnico Ing. Civil\n(Cristian, Romario, Cristina, Marcelo)" as TecCivil {
-    :Asignar fase de verificación;
-    :Verificar información de frentistas;
-    note right
-      Se valida la existencia y conformidad 
-      de los frentistas respecto a la 
-      infraestructura solicitada
-    end note
-    :Guardar verificación en BD;
-  }
-end group
+alt Es competente
+  TecCivil -> TecCivil : Revisar requisitos
+  opt Incompletos
+    TecCivil -> Ciudadano : Solicitar información
+    Ciudadano -> Ventanilla : Entregar información
+  end
+else No competente
+  TecCivil -> Supervisor : Respuesta no competencia
+  Supervisor -> Supervisor : Revisar y firmar
+  BD -> Ciudadano : Notificar no competencia
+end
 
-group FASE 3: INFORME DE AUTORIZACIÓN (12 días)
-  partition "Técnico Ing. Civil\n(Cristian, Romario, Cristina)\nIngeniero Geógrafo (Marcelo)" as TecCivilGeo {
-    :Asignar elaboración de informe;
-    :Elaborar informe de colocación de infraestructura;
-    :Supervisor revisa informe;
-    :Revisar coordinación (Supervisor);
-    :Elaborar oficios de respuesta;
-    :Revisar y firmar director (Supervisor);
-    :Guardar informe final en BD;
-    :Enviar respuesta al usuario;
-    :Notificar cierre al Técnico;
-    :Informe final al Supervisor;
-  }
-end group
+== FASE 2: VERIFICACIÓN FRENTISTAS (20 días) ==
+Herramienta -> TecCivil : Asignar fase
+TecCivil -> TecCivil : Verificar info frentistas
+note right
+  Validar existencia y conformidad
+  de frentistas respecto a
+  infraestructura solicitada
+end note
+TecCivil -> BD : Guardar verificación
 
-stop
+== FASE 3: INFORME AUTORIZACIÓN (12 días) ==
+Herramienta -> TecGeo : Asignar elaboración
+TecGeo -> BD : Elaborar informe colocación
+Supervisor -> Supervisor : Revisar informe
+Supervisor -> Supervisor : Revisar coordinación
+TecGeo -> BD : Elaborar oficios respuesta
+Supervisor -> Supervisor : Firma director
+BD -> Ciudadano : Enviar respuesta
+Herramienta -> TecGeo : Notificar cierre
+Herramienta -> Supervisor : Informe final
 
 @enduml`,
   'diagram-declaratoria-camino': String.raw`@startuml
 !pragma charset UTF-8
 skinparam defaultFontName Arial
-title Flujo del Trámite de Factibilidad de Declaratoria de Camino Público
+title Flujo del Trámite de Declaratoria de Camino Público
 subtitle Duración total estimada: 60 días
 
-start
+actor "Ciudadano" as Ciudadano
+actor "Ventanilla" as Ventanilla
+participant "Herramienta" as Herramienta
+actor "Téc. Geógrafo" as TecGeo
+actor "Supervisor" as Supervisor
+participant "MTOP" as MTOP
+database "BD" as BD
 
-group REGISTRO DE TRÁMITE Y ASIGNACIÓN
-  :Ciudadano entrega solicitud y requisitos;
-  :Ventanilla registra trámite;
-  :Herramienta asigna fase de competencia;
-end group
+== REGISTRO ==
+Ciudadano -> Ventanilla : Entrega solicitud
+Ventanilla -> Herramienta : Registrar trámite
+Herramienta -> TecGeo : Asignar fase competencia
 
-group FASE 1: COMPETENCIA (15 días)
-  partition "Técnico Geógrafo\n(Fernanda, Katty, Alicia, Marcelo)" as TecGeo {
-    :Verificar competencia;
-    if (Es competente?) then (Sí)
-      :Revisar requisitos completos;
-      if (Requisitos completos?) then (Sí)
-        :Elaborar mapa de competencia y pertinencia;
-        :Elaborar planimetría en formato SHAPE;
-        :Guardar documentos técnicos en BD;
-      else (No)
-        :Solicitar información al ciudadano;
-        :Ventanilla registra información;
-      end if
-    else (No)
-      :Elaborar informe de no competencia;
-      :Supervisor revisa informe;
-      :Revisar y firmar director (Supervisor);
-      :Guardar respuesta en BD;
-      :Notificar no competencia al ciudadano;
-    end if
-  }
-end group
+== FASE 1: COMPETENCIA (15 días) ==
+note over TecGeo: Fernanda, Katty,\nAlicia, Marcelo
+TecGeo -> TecGeo : Verificar competencia
 
-group FASE 2: INFORME PARA EL MTOP (45 días)
-  partition "Técnico Geógrafo\n(Fernanda, Katty, Alicia, Marcelo)" as TecGeo {
-    :Asignar elaboración de informe;
-    :Analizar y verificar pertinencia;
-    if (Requiere información adicional?) then (Sí)
-      :Solicitar información a terceros;
-      :Recibir información;
-    end if
-    :Elaborar informe técnico;
-    :Supervisor revisa informe;
-    :Revisar coordinación (Supervisor);
-    :Elaborar oficios de respuesta al MTOP;
-    :Revisar coordinación (oficio máxima autoridad) (Supervisor);
-    :Revisión director de vialidad (Supervisor);
-    :Revisión y firma Prefecta (Supervisor);
-    :Guardar informe final en BD;
-    :Enviar respuesta al MTOP;
-    note right
-      El trámite se cierra cuando
-      se envía al MTOP (cierre del trámite)
-    end note
-    :Notificar cierre al Técnico Geógrafo;
-    :Informe final al Supervisor;
-  }
-end group
+alt Es competente
+  TecGeo -> TecGeo : Revisar requisitos
+  alt Completos
+    TecGeo -> BD : Mapa competencia y pertinencia
+    TecGeo -> BD : Planimetría formato SHAPE
+  else Incompletos
+    TecGeo -> Ciudadano : Solicitar información
+    Ciudadano -> Ventanilla : Entregar información
+  end
+else No competente
+  TecGeo -> Supervisor : Informe no competencia
+  Supervisor -> Supervisor : Revisar y firmar
+  BD -> Ciudadano : Notificar no competencia
+end
 
-stop
+== FASE 2: INFORME PARA MTOP (45 días) ==
+Herramienta -> TecGeo : Asignar elaboración
+TecGeo -> TecGeo : Analizar y verificar
+
+opt Requiere información
+  TecGeo -> Herramienta : Solicitar info terceros
+end
+
+TecGeo -> BD : Elaborar informe técnico
+Supervisor -> Supervisor : Revisar informe
+Supervisor -> Supervisor : Revisar coordinación
+TecGeo -> BD : Elaborar oficios MTOP
+Supervisor -> Supervisor : Revisar (máxima autoridad)
+Supervisor -> Supervisor : Revisión director vialidad
+Supervisor -> Supervisor : Revisión y firma Prefecta
+BD -> MTOP : Enviar respuesta MTOP
+note right
+  Cierre del trámite
+  al enviar al MTOP
+end note
+Herramienta -> TecGeo : Notificar cierre
+Herramienta -> Supervisor : Informe final
 
 @enduml`
 };
