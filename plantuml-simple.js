@@ -252,7 +252,7 @@ Ventanilla -> Herramienta : Registrar trámite
 Herramienta -> TecGeo : Asignar fase competencia
 
 == FASE 1: COMPETENCIA (8 días) ==
-note over TecGeo: Katy, Alicia, Fernanda
+note over TecGeo: Equipo de Ingenieros Geógrafos
 TecGeo -> TecGeo : Verificar competencia
 
 alt Es competente
@@ -270,7 +270,7 @@ else No competente
 end
 
 == FASE 2: INFORME PERTINENCIA (25 días) ==
-note over TecArq: Irene, Carla, Nicole,\nSantiago, Evelyn, Marcelo
+note over TecArq: Equipo de Arquitectos
 Herramienta -> TecArq : Asignar fase
 
 TecArq -> TecArq : Analizar pertinencia
@@ -289,7 +289,7 @@ else No pertinente
 end
 
 == FASE 3: TOPOGRAFÍA (67 días) ==
-note over TecTopo: Edison, Jairo
+note over TecTopo: Equipo de Topógrafos
 Herramienta -> TecTopo : Asignar fase
 
 alt Cuenta con topografía
@@ -304,7 +304,7 @@ TecTopo -> BD : Elaborar informe y dibujo
 Supervisor -> BD : Aprobar fase
 
 == FASE 4: DISEÑO GEOMÉTRICO (30 días) ==
-note over TecCivil: Cristian, Romario, Cristina
+note over TecCivil: Equipo de Ingenieros Civiles
 Herramienta -> TecCivil : Asignar fase
 
 TecCivil -> TecCivil : Elaborar diseño
@@ -345,7 +345,7 @@ Ventanilla -> Herramienta : Registrar trámite
 Herramienta -> TecCivil : Asignar fase competencia
 
 == FASE 1: COMPETENCIA (4 días) ==
-note over TecCivil: Cristian, Romario, Cristina
+note over TecCivil: Equipo de Ingenieros Civiles
 TecCivil -> TecCivil : Verificar competencia
 
 alt Es competente
@@ -361,7 +361,7 @@ else No competente
 end
 
 == FASE 2: VERIFICACIÓN APROBACIÓN (5 días) ==
-note over TecGeo: Katty, Marcelo
+note over TecGeo: Equipo de Ingenieros Geógrafos
 Herramienta -> TecGeo : Asignar fase
 
 TecGeo -> TecGeo : Analizar y verificar
@@ -421,7 +421,7 @@ else No competente
 end
 
 == FASE 2: VERIFICACIÓN APROBACIÓN (6 días) ==
-note over TecArq: Irene, Carla, Nicole,\nSantiago, Evelyn, Marcelo
+note over TecArq: Equipo de Arquitectos
 Herramienta -> TecArq : Asignar fase
 
 TecArq -> TecArq : Verificar información
@@ -469,7 +469,7 @@ Ventanilla -> Herramienta : Registrar trámite
 Herramienta -> TecGeo : Asignar fase competencia
 
 == FASE 1: COMPETENCIA (8 días) ==
-note over TecGeo: Katty, Alicia,\nFernanda, Marcelo
+note over TecGeo: Equipo de Ingenieros Geógrafos
 TecGeo -> TecGeo : Verificar competencia
 
 alt Es competente
@@ -525,7 +525,7 @@ Ventanilla -> Herramienta : Registrar trámite
 Herramienta -> TecArq : Asignar fase competencia
 
 == FASE 1: COMPETENCIA (3 días) ==
-note over TecArq: Irene, Carla, Nicole,\nSantiago, Evelyn
+note over TecArq: Equipo de Arquitectos
 TecArq -> TecArq : Verificar competencia
 
 alt Es competente
@@ -557,7 +557,7 @@ Supervisor -> Supervisor : Revisar coordinación
 Supervisor -> BD : Guardar informe previo
 
 == FASE 4: TRABAJO EN TERRITORIO (7 días) ==
-note over TecTopo: Edison, Jairo
+note over TecTopo: Equipo de Topógrafos
 Herramienta -> TecTopo : Asignar colocación
 TecTopo -> TecTopo : Colocación eje vial
 TecTopo -> BD : Registrar colocación
@@ -592,7 +592,7 @@ Ventanilla -> Herramienta : Registrar trámite
 Herramienta -> TecCivil : Asignar fase competencia
 
 == FASE 1: COMPETENCIA (3 días) ==
-note over TecCivil, TecGeo: Cristian, Romario,\nCristina, Marcelo
+note over TecCivil, TecGeo: Equipo Técnico Multidisciplinario
 TecCivil -> TecCivil : Verificar competencia
 
 alt Es competente
@@ -648,7 +648,7 @@ Ventanilla -> Herramienta : Registrar trámite
 Herramienta -> TecGeo : Asignar fase competencia
 
 == FASE 1: COMPETENCIA (15 días) ==
-note over TecGeo: Fernanda, Katty,\nAlicia, Marcelo
+note over TecGeo: Equipo de Ingenieros Geógrafos
 TecGeo -> TecGeo : Verificar competencia
 
 alt Es competente
@@ -696,24 +696,8 @@ function loadAndRenderDiagram(containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  let code = diagramCodes[containerId];
+  const code = diagramCodes[containerId];
   if (!code) return;
-
-  // Ocultar nombres si el toggle está activado
-  const hideNames = localStorage.getItem('hideNames') === 'true';
-  if (hideNames) {
-    // Eliminar líneas que contienen nombres de técnicos (note over con nombres)
-    code = code.split('\n').filter(line => {
-      const trimmedLine = line.trim();
-      // Mantener todas las líneas excepto las que sean "note over" con nombres de personas
-      if (trimmedLine.startsWith('note over') && !trimmedLine.includes('días')) {
-        // Verificar si contiene nombres comunes de los técnicos
-        const hasNames = /Katy|Alicia|Fernanda|Cristian|Romario|Cristina|Marcelo|Irene|Carla|Nicole|Santiago|Evelyn|Edison|Jairo/i.test(trimmedLine);
-        return !hasNames;
-      }
-      return true;
-    }).join('\n');
-  }
 
   try {
     container.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text-secondary)"><div style="font-size:2rem">⏳</div><p>Cargando...</p></div>';

@@ -38,23 +38,6 @@ sidebarToggle.addEventListener('click', () => {
     localStorage.setItem('sidebarCollapsed', sidebarCollapsed);
 });
 
-// ==================== Hide Names Toggle ====================
-const hideNamesToggle = document.getElementById('hideNamesToggle');
-let hideNames = localStorage.getItem('hideNames') === 'true';
-
-// Apply saved state
-if (hideNames) {
-    hideNamesToggle.checked = true;
-}
-
-hideNamesToggle.addEventListener('change', () => {
-    hideNames = hideNamesToggle.checked;
-    localStorage.setItem('hideNames', hideNames);
-
-    // Refresh all diagrams
-    window.reloadAllDiagrams();
-});
-
 // ==================== Mobile Menu Toggle ====================
 const menuToggle = document.getElementById('menuToggle');
 const sidebar = document.getElementById('sidebar');
