@@ -50,7 +50,7 @@ if (hideNames) {
 hideNamesToggle.addEventListener('change', () => {
     hideNames = hideNamesToggle.checked;
     localStorage.setItem('hideNames', hideNames);
-    
+
     // Refresh all diagrams
     window.reloadAllDiagrams();
 });
@@ -423,37 +423,37 @@ document.querySelector('.header-actions').insertBefore(
 // Agregar controles a cada diagrama después de que se carguen
 window.addEventListener('load', () => {
     const diagrams = document.querySelectorAll('.diagram-container');
-    
+
     diagrams.forEach(diagram => {
         const header = diagram.querySelector('.diagram-header');
         if (!header) return;
-        
+
         // Crear contenedor de controles
         const controls = document.createElement('div');
         controls.className = 'diagram-controls';
-        
+
         // Botón de pantalla completa
         const fullscreenBtn = document.createElement('button');
         fullscreenBtn.className = 'btn-fullscreen';
         fullscreenBtn.innerHTML = '🔍 Pantalla completa';
         fullscreenBtn.onclick = () => toggleFullscreen(diagram);
-        
+
         // Botón de zoom in
         const zoomInBtn = document.createElement('button');
         zoomInBtn.className = 'btn-zoom-in';
         zoomInBtn.innerHTML = '🔎+';
         zoomInBtn.onclick = () => zoomDiagram(diagram, 'in');
-        
+
         // Botón de zoom out
         const zoomOutBtn = document.createElement('button');
         zoomOutBtn.className = 'btn-zoom-out';
         zoomOutBtn.innerHTML = '🔎−';
         zoomOutBtn.onclick = () => zoomDiagram(diagram, 'out');
-        
+
         controls.appendChild(zoomInBtn);
         controls.appendChild(zoomOutBtn);
         controls.appendChild(fullscreenBtn);
-        
+
         // Reemplazar botón "Ver Diagrama" por controles
         const oldButton = header.querySelector('.btn-expand');
         if (oldButton) {
@@ -461,16 +461,16 @@ window.addEventListener('load', () => {
             newExpandBtn.className = 'btn-expand';
             newExpandBtn.textContent = oldButton.textContent;
             newExpandBtn.onclick = oldButton.onclick;
-            
+
             header.innerHTML = '';
             header.appendChild(document.createElement('h5')).textContent = diagram.querySelector('.diagram-header h5')?.textContent || 'Diagrama';
-            
+
             const actionsDiv = document.createElement('div');
             actionsDiv.style.display = 'flex';
             actionsDiv.style.gap = '0.5rem';
             actionsDiv.appendChild(controls);
             actionsDiv.appendChild(newExpandBtn);
-            
+
             header.appendChild(actionsDiv);
         }
     });
@@ -498,13 +498,13 @@ function toggleFullscreen(diagram) {
 function zoomDiagram(diagram, direction) {
     const content = diagram.querySelector('.diagram-content');
     content.classList.remove('zoomed-in', 'zoomed-out');
-    
+
     if (direction === 'in') {
         content.classList.add('zoomed-in');
     } else if (direction === 'out') {
         content.classList.add('zoomed-out');
     }
-    
+
     // Reset después de 3 segundos
     setTimeout(() => {
         content.classList.remove('zoomed-in', 'zoomed-out');
@@ -512,7 +512,7 @@ function zoomDiagram(diagram, direction) {
 }
 
 // ==================== Reload Diagrams with/without Names ====================
-window.reloadAllDiagrams = function() {
+window.reloadAllDiagrams = function () {
     // Esta función será llamada desde plantuml-simple.js
     // para recargar diagramas con nombres ocultos
     if (typeof window.renderAllDiagrams === 'function') {

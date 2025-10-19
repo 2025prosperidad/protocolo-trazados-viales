@@ -198,11 +198,11 @@ body.sidebar-collapsed .btn-sidebar-toggle .toggle-icon {
     box-shadow: var(--shadow-sm);
 }
 
-.toggle-label input[type="checkbox"]:checked + .toggle-switch {
+.toggle-label input[type="checkbox"]:checked+.toggle-switch {
     background-color: var(--primary-color);
 }
 
-.toggle-label input[type="checkbox"]:checked + .toggle-switch::after {
+.toggle-label input[type="checkbox"]:checked+.toggle-switch::after {
     transform: translateX(20px);
 }
 
@@ -725,6 +725,7 @@ body.sidebar-collapsed .content {
         opacity: 0;
         transform: scale(0.95);
     }
+
     to {
         opacity: 1;
         transform: scale(1);
@@ -750,6 +751,7 @@ body.sidebar-collapsed .content {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);

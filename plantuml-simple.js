@@ -902,7 +902,7 @@ window.expandDiagram = function (diagramId) {
 };
 
 // Función global para recargar todos los diagramas
-window.renderAllDiagrams = function() {
+window.renderAllDiagrams = function () {
   console.log('🔄 Recargando todos los diagramas...');
   Object.keys(diagramCodes).forEach(diagramId => {
     const container = document.getElementById(diagramId);
