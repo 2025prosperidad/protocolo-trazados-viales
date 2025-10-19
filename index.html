@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta name="description" content="Documentación Técnica de la Plataforma de Trazados Viales - GADPP. Desarrollado con Google AppSheet y Apps Script">
+    <meta name="description"
+        content="Documentación Técnica de la Plataforma de Trazados Viales - GADPP. Desarrollado con Google AppSheet y Apps Script">
     <meta name="keywords" content="Trazados Viales, GADPP, AppSheet, Google Cloud, Pichincha, Gestión de Trámites">
     <meta name="author" content="Infinity Solutions RII Cia. Ltda.">
     <meta name="theme-color" content="#2563eb">
@@ -54,7 +55,14 @@
                     <li><a href="#registro" class="nav-link">1. Registro del Documento</a></li>
                     <li><a href="#introduccion" class="nav-link">2. Introducción y Antecedentes</a></li>
                     <li><a href="#objetivo" class="nav-link">3. Objetivo</a></li>
-                    <li><a href="#modelado" class="nav-link">4. Modelado del Sistema (UML)</a></li>
+                    <li>
+                        <a href="#modelado" class="nav-link">4. Modelado del Sistema (UML)</a>
+                        <ul class="sub-menu">
+                            <li><a href="#casos-uso" class="nav-link">4.1 Casos de Uso</a></li>
+                            <li><a href="#secuencia" class="nav-link">4.2 Secuencia</a></li>
+                            <li><a href="#clases" class="nav-link">4.3 Clases</a></li>
+                        </ul>
+                    </li>
                     <li><a href="#contexto" class="nav-link">5. Contexto Operativo</a></li>
                     <li>
                         <a href="#gestion-tramites" class="nav-link">6. Gestión de Trámites</a>
@@ -220,23 +228,54 @@
                 <p class="text-content">
                     Para facilitar la comprensión de la estructura y el comportamiento de la plataforma, esta
                     documentación utiliza el Lenguaje Unificado de Modelado (UML) como estándar para la representación
-                    gráfica.
+                    gráfica. Los diagramas presentados modelan la implementación actual del software, proveyendo una
+                    abstracción visual de sus componentes y sus interacciones.
                 </p>
-                <div class="diagram-types">
-                    <div class="diagram-type">
-                        <h4>📊 Diagramas de Casos de Uso</h4>
-                        <p>Representan las funcionalidades clave del sistema y cómo los diferentes tipos de usuarios
-                            interactúan con ellas.</p>
+
+                <!-- 4.1 Diagrama de Casos de Uso -->
+                <div id="casos-uso" class="subsection">
+                    <h3>4.1 Diagrama de Casos de Uso</h3>
+                    <p class="text-content">
+                        Este diagrama representa las funcionalidades clave del sistema y cómo los diferentes actores
+                        (Ciudadano, Ventanilla, Técnico, Supervisor) interactúan con ellas. Muestra los casos de uso
+                        principales como registrar trámites, gestionar fases, monitorear procesos y generar reportes.
+                    </p>
+
+                    <div class="diagram-container">
+                        <h4>📊 Diagrama: Casos de Uso del Sistema</h4>
+                        <div id="diagram-casos-uso" class="diagram-content"></div>
                     </div>
-                    <div class="diagram-type">
-                        <h4>🔄 Diagramas de Secuencia</h4>
-                        <p>Describen el flujo cronológico de mensajes e interacciones entre los componentes del sistema.
-                        </p>
+                </div>
+
+                <!-- 4.2 Diagrama de Secuencia -->
+                <div id="secuencia" class="subsection">
+                    <h3>4.2 Diagrama de Secuencia</h3>
+                    <p class="text-content">
+                        El siguiente diagrama ilustra la secuencia cronológica de interacciones implementada para la
+                        creación y gestión de un trámite. Muestra cómo los componentes del sistema (Portal Web, AppSheet,
+                        Apps Script, Google Sheets, Google Drive) se comunican entre sí para ejecutar las operaciones,
+                        desde el registro inicial hasta la transición entre fases.
+                    </p>
+
+                    <div class="diagram-container">
+                        <h4>🔄 Diagrama: Secuencia de Creación y Gestión de Trámite</h4>
+                        <div id="diagram-secuencia-sistema" class="diagram-content"></div>
                     </div>
-                    <div class="diagram-type">
-                        <h4>🗂️ Diagramas de Clases</h4>
-                        <p>Definen el modelo estático de datos, mostrando las principales entidades del sistema y sus
-                            relaciones.</p>
+                </div>
+
+                <!-- 4.3 Diagrama de Clases -->
+                <div id="clases" class="subsection">
+                    <h3>4.3 Modelo de Datos (Diagrama de Clases)</h3>
+                    <p class="text-content">
+                        El modelo de datos implementado para la gestión de trámites se define a continuación. La estructura,
+                        centrada en la entidad <strong>Trámite</strong>, garantiza la integridad referencial y la
+                        escalabilidad del sistema. Incluye las clases principales (Ciudadano, Técnico, Fase, Documento,
+                        Notificación, Derivación, etc.) y sus relaciones.
+                    </p>
+
+                    <div class="diagram-container">
+                        <h4>🗂️ Diagrama: Modelo de Clases del Sistema</h4>
+                        <div id="diagram-clases" class="diagram-content"></div>
                     </div>
                 </div>
             </section>
@@ -837,15 +876,18 @@
                     <tbody>
                         <tr>
                             <td>Plataforma Principal</td>
-                            <td><strong>Google AppSheet</strong> - Plataforma No-Code para desarrollo de aplicaciones empresariales</td>
+                            <td><strong>Google AppSheet</strong> - Plataforma No-Code para desarrollo de aplicaciones
+                                empresariales</td>
                         </tr>
                         <tr>
                             <td>Automatización</td>
-                            <td><strong>Google Apps Script</strong> - Automatización y lógica de negocio personalizada</td>
+                            <td><strong>Google Apps Script</strong> - Automatización y lógica de negocio personalizada
+                            </td>
                         </tr>
                         <tr>
                             <td>Base de Datos</td>
-                            <td><strong>Google Sheets</strong> - Almacenamiento de datos estructurado en Google Cloud</td>
+                            <td><strong>Google Sheets</strong> - Almacenamiento de datos estructurado en Google Cloud
+                            </td>
                         </tr>
                         <tr>
                             <td>Almacenamiento de Archivos</td>
@@ -899,6 +941,19 @@
         const script = document.createElement('script');
         script.src = 'plantuml-simple.js?v=' + new Date().getTime();
         document.head.appendChild(script);
+        
+        // Cargar automáticamente los diagramas de la sección de Modelado UML
+        script.onload = function() {
+            // Esperar un momento para asegurar que todo esté listo
+            setTimeout(() => {
+                if (typeof loadAndRenderDiagram === 'function') {
+                    console.log('🎨 Cargando diagramas UML automáticamente...');
+                    loadAndRenderDiagram('diagram-casos-uso');
+                    loadAndRenderDiagram('diagram-secuencia-sistema');
+                    loadAndRenderDiagram('diagram-clases');
+                }
+            }, 100);
+        };
     </script>
 </body>
 

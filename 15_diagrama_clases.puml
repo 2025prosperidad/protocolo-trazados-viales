@@ -1,0 +1,198 @@
+@startuml
+!pragma charset UTF-8
+skinparam defaultFontName Arial
+title Diagrama de Clases - Modelo de Datos del Sistema
+
+class Tramite {
+  + id: String
+  + numero_expediente: String
+  + fecha_registro: DateTime
+  + tipo_tramite: TipoTramite
+  + estado: EstadoTramite
+  + ciudadano_id: String
+  + fase_actual: String
+  + tecnico_asignado_id: String
+  + prioridad: String
+  + tiempo_estimado: Integer
+  + fecha_vencimiento: DateTime
+  + ubicacion_geográfica: String
+  + observaciones: Text
+  --
+  + registrar()
+  + asignarTecnico()
+  + cambiarEstado()
+  + avanzarFase()
+  + pausar()
+  + reanudar()
+  + finalizar()
+}
+
+class Ciudadano {
+  + id: String
+  + nombres: String
+  + apellidos: String
+  + cedula: String
+  + email: String
+  + telefono: String
+  + direccion: String
+  --
+  + registrarTramite()
+  + consultarEstado()
+  + entregarDocumentos()
+}
+
+class Tecnico {
+  + id: String
+  + nombres: String
+  + perfil: PerfilTecnico
+  + especialidad: String
+  + email: String
+  + estado: String
+  + carga_trabajo: Integer
+  --
+  + gestionarFase()
+  + elaborarInforme()
+  + solicitarInformacion()
+  + cargarEntregables()
+}
+
+class Fase {
+  + id: String
+  + tramite_id: String
+  + nombre: String
+  + numero_orden: Integer
+  + perfil_requerido: PerfilTecnico
+  + estado: EstadoFase
+  + fecha_inicio: DateTime
+  + fecha_fin: DateTime
+  + tiempo_duracion: Integer
+  + tecnico_id: String
+  --
+  + iniciar()
+  + pausar()
+  + completar()
+  + asignarTecnico()
+}
+
+class Documento {
+  + id: String
+  + tramite_id: String
+  + fase_id: String
+  + nombre: String
+  + tipo: TipoDocumento
+  + url_archivo: String
+  + fecha_carga: DateTime
+  + cargado_por: String
+  + tamaño: Integer
+  --
+  + subir()
+  + descargar()
+  + eliminar()
+  + versionar()
+}
+
+class Notificacion {
+  + id: String
+  + tramite_id: String
+  + destinatario_id: String
+  + tipo: TipoNotificacion
+  + canal: CanalNotificacion
+  + mensaje: Text
+  + fecha_envio: DateTime
+  + estado: String
+  --
+  + enviar()
+  + marcarLeida()
+}
+
+class Derivacion {
+  + id: String
+  + tramite_id: String
+  + fase_id: String
+  + motivo: Text
+  + entidad_destino: String
+  + fecha_solicitud: DateTime
+  + fecha_respuesta: DateTime
+  + estado: String
+  --
+  + solicitar()
+  + procesar()
+  + responder()
+}
+
+class SolicitudInformacion {
+  + id: String
+  + tramite_id: String
+  + fase_id: String
+  + documentos_solicitados: Text
+  + fecha_solicitud: DateTime
+  + fecha_entrega: DateTime
+  + estado: String
+  --
+  + crear()
+  + registrarEntrega()
+  + cancelar()
+}
+
+class ExpedienteDigital {
+  + id: String
+  + tramite_id: String
+  + url_carpeta_drive: String
+  + documentos_count: Integer
+  + tamaño_total: Integer
+  --
+  + crear()
+  + agregarDocumento()
+  + generarPDF()
+}
+
+enum TipoTramite {
+  TRAZADO_VIAL
+  CERTIFICACION_VIAL
+  REPLANTEO_VIAL
+  SECCION_TRANSVERSAL
+  COLOCACION_EJE
+  COLOCACION_INFRAESTRUCTURA
+  DECLARATORIA_CAMINO
+}
+
+enum EstadoTramite {
+  REGISTRADO
+  EN_PROCESO
+  SOLICITUD_INFORMACION
+  EN_DERIVACION
+  FINALIZADO
+  RECHAZADO
+}
+
+enum PerfilTecnico {
+  ING_GEOGRAFO
+  ARQUITECTO
+  TOPOGRAFO
+  ING_CIVIL
+}
+
+enum EstadoFase {
+  PENDIENTE
+  EN_CURSO
+  PAUSADA
+  COMPLETADA
+}
+
+' Relaciones
+Tramite "1" *-- "1..*" Fase : contiene
+Tramite "1" -- "1" Ciudadano : solicitado por
+Tramite "1" -- "0..*" Tecnico : asignado a
+Tramite "1" *-- "0..*" Documento : tiene
+Tramite "1" *-- "0..*" Notificacion : genera
+Tramite "1" o-- "0..*" Derivacion : puede tener
+Tramite "1" o-- "0..*" SolicitudInformacion : puede tener
+Tramite "1" -- "1" ExpedienteDigital : tiene
+
+Fase "1" -- "1" Tecnico : asignada a
+Fase "1" *-- "0..*" Documento : genera
+
+Documento "0..*" -- "1" ExpedienteDigital : almacenado en
+
+@enduml
+

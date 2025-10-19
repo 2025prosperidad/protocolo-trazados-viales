@@ -1,0 +1,86 @@
+@startuml
+!pragma charset UTF-8
+skinparam defaultFontName Arial
+title Diagrama de Casos de Uso - Sistema de Trazados Viales
+
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Ciudadano" as Ciudadano
+actor "Técnico" as Tecnico
+actor "Supervisor" as Supervisor
+actor "Ventanilla" as Ventanilla
+
+rectangle "Sistema de Trazados Viales" {
+  usecase "Registrar Trámite" as UC1
+  usecase "Consultar Estado" as UC2
+  usecase "Entregar Documentación" as UC3
+  usecase "Recibir Notificaciones" as UC4
+  
+  usecase "Gestionar Fases" as UC5
+  usecase "Elaborar Informes" as UC6
+  usecase "Solicitar Información" as UC7
+  usecase "Solicitar Derivación" as UC8
+  usecase "Cargar Entregables" as UC9
+  
+  usecase "Monitorear Trámites" as UC10
+  usecase "Reasignar Tareas" as UC11
+  usecase "Generar Reportes" as UC12
+  usecase "Aprobar Fases" as UC13
+  
+  usecase "Validar Requisitos" as UC14
+  usecase "Registrar en Sistema" as UC15
+  usecase "Recibir Documentos" as UC16
+}
+
+' Relaciones Ciudadano
+Ciudadano --> UC1
+Ciudadano --> UC2
+Ciudadano --> UC3
+Ciudadano --> UC4
+
+' Relaciones Ventanilla
+Ventanilla --> UC14
+Ventanilla --> UC15
+Ventanilla --> UC16
+
+' Relaciones Técnico
+Tecnico --> UC5
+Tecnico --> UC6
+Tecnico --> UC7
+Tecnico --> UC8
+Tecnico --> UC9
+Tecnico --> UC4
+
+' Relaciones Supervisor
+Supervisor --> UC10
+Supervisor --> UC11
+Supervisor --> UC12
+Supervisor --> UC13
+Supervisor --> UC4
+
+' Relaciones de extend/include
+UC1 ..> UC14 : <<include>>
+UC1 ..> UC15 : <<include>>
+UC5 ..> UC6 : <<include>>
+UC5 ..> UC9 : <<include>>
+UC7 ..> UC4 : <<include>>
+UC8 ..> UC4 : <<include>>
+
+note right of UC1
+  Portal público y
+  ventanilla presencial
+end note
+
+note right of UC5
+  Ciclo de múltiples
+  fases secuenciales
+end note
+
+note right of UC10
+  Dashboard en tiempo real
+  con KPIs y métricas
+end note
+
+@enduml
+

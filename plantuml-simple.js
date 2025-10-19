@@ -689,6 +689,383 @@ end note
 Herramienta -> TecGeo : Notificar cierre
 Herramienta -> Supervisor : Informe final
 
+@enduml`,
+  
+  'diagram-casos-uso': String.raw`@startuml
+!pragma charset UTF-8
+skinparam defaultFontName Arial
+title Diagrama de Casos de Uso - Sistema de Trazados Viales
+
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Ciudadano" as Ciudadano
+actor "Técnico" as Tecnico
+actor "Supervisor" as Supervisor
+actor "Ventanilla" as Ventanilla
+
+rectangle "Sistema de Trazados Viales" {
+  usecase "Registrar Trámite" as UC1
+  usecase "Consultar Estado" as UC2
+  usecase "Entregar Documentación" as UC3
+  usecase "Recibir Notificaciones" as UC4
+  
+  usecase "Gestionar Fases" as UC5
+  usecase "Elaborar Informes" as UC6
+  usecase "Solicitar Información" as UC7
+  usecase "Solicitar Derivación" as UC8
+  usecase "Cargar Entregables" as UC9
+  
+  usecase "Monitorear Trámites" as UC10
+  usecase "Reasignar Tareas" as UC11
+  usecase "Generar Reportes" as UC12
+  usecase "Aprobar Fases" as UC13
+  
+  usecase "Validar Requisitos" as UC14
+  usecase "Registrar en Sistema" as UC15
+  usecase "Recibir Documentos" as UC16
+}
+
+' Relaciones Ciudadano
+Ciudadano --> UC1
+Ciudadano --> UC2
+Ciudadano --> UC3
+Ciudadano --> UC4
+
+' Relaciones Ventanilla
+Ventanilla --> UC14
+Ventanilla --> UC15
+Ventanilla --> UC16
+
+' Relaciones Técnico
+Tecnico --> UC5
+Tecnico --> UC6
+Tecnico --> UC7
+Tecnico --> UC8
+Tecnico --> UC9
+Tecnico --> UC4
+
+' Relaciones Supervisor
+Supervisor --> UC10
+Supervisor --> UC11
+Supervisor --> UC12
+Supervisor --> UC13
+Supervisor --> UC4
+
+' Relaciones de extend/include
+UC1 ..> UC14 : <<include>>
+UC1 ..> UC15 : <<include>>
+UC5 ..> UC6 : <<include>>
+UC5 ..> UC9 : <<include>>
+UC7 ..> UC4 : <<include>>
+UC8 ..> UC4 : <<include>>
+
+note right of UC1
+  Portal público y
+  ventanilla presencial
+end note
+
+note right of UC5
+  Ciclo de múltiples
+  fases secuenciales
+end note
+
+note right of UC10
+  Dashboard en tiempo real
+  con KPIs y métricas
+end note
+
+@enduml`,
+
+  'diagram-secuencia-sistema': String.raw`@startuml
+!pragma charset UTF-8
+skinparam defaultFontName Arial
+title Diagrama de Secuencia - Creación y Gestión de Trámite
+
+actor "Ciudadano" as C
+participant "Portal Web" as P
+participant "Ventanilla" as V
+participant "AppSheet" as A
+participant "Apps Script" as AS
+participant "Google Sheets" as GS
+participant "Google Drive" as GD
+actor "Técnico" as T
+actor "Supervisor" as S
+
+== Registro de Trámite ==
+C -> V : Entrega solicitud y documentos
+activate V
+V -> V : Valida requisitos
+V -> P : Registra trámite
+activate P
+P -> A : Crea nuevo trámite
+activate A
+A -> GS : INSERT tramite
+activate GS
+GS --> A : ID generado
+deactivate GS
+A -> GD : Crea carpeta expediente
+activate GD
+GD --> A : URL carpeta
+deactivate GD
+A --> P : Trámite creado
+deactivate A
+P --> V : Confirmación
+deactivate P
+V --> C : Entrega número de expediente
+deactivate V
+
+== Asignación Automática ==
+A -> AS : Trigger: Nuevo trámite
+activate AS
+AS -> GS : Consulta técnicos disponibles
+activate GS
+GS --> AS : Lista técnicos
+deactivate GS
+AS -> AS : Algoritmo Round-Robin
+AS -> GS : UPDATE asignar técnico
+activate GS
+GS --> AS : OK
+deactivate GS
+AS -> A : Notificar asignación
+deactivate AS
+
+== Notificaciones ==
+A -> T : Email/WhatsApp: Nuevo trámite asignado
+A -> S : Notifica panel supervisor
+A -> C : SMS: Trámite registrado
+
+== Gestión de Fase ==
+T -> A : Accede a trámite
+activate A
+A -> GS : SELECT tramite + documentos
+activate GS
+GS --> A : Datos
+deactivate GS
+A --> T : Muestra expediente
+T -> T : Realiza análisis técnico
+T -> A : Carga informe
+A -> GD : Sube archivo
+activate GD
+GD --> A : URL archivo
+deactivate GD
+A -> GS : UPDATE fase completada
+activate GS
+GS --> A : OK
+deactivate GS
+
+== Transición de Fase ==
+A -> AS : Trigger: Fase completada
+activate AS
+AS -> GS : Identifica siguiente fase
+activate GS
+GS --> AS : Siguiente fase
+deactivate GS
+AS -> GS : Asigna nuevo técnico
+AS -> A : Nueva asignación
+deactivate AS
+A -> T : Notifica nuevo técnico
+A -> S : Actualiza dashboard
+deactivate A
+
+@enduml`,
+
+  'diagram-clases': String.raw`@startuml
+!pragma charset UTF-8
+skinparam defaultFontName Arial
+title Diagrama de Clases - Modelo de Datos del Sistema
+
+class Tramite {
+  + id: String
+  + numero_expediente: String
+  + fecha_registro: DateTime
+  + tipo_tramite: TipoTramite
+  + estado: EstadoTramite
+  + ciudadano_id: String
+  + fase_actual: String
+  + tecnico_asignado_id: String
+  + prioridad: String
+  + tiempo_estimado: Integer
+  + fecha_vencimiento: DateTime
+  + ubicacion_geográfica: String
+  + observaciones: Text
+  --
+  + registrar()
+  + asignarTecnico()
+  + cambiarEstado()
+  + avanzarFase()
+  + pausar()
+  + reanudar()
+  + finalizar()
+}
+
+class Ciudadano {
+  + id: String
+  + nombres: String
+  + apellidos: String
+  + cedula: String
+  + email: String
+  + telefono: String
+  + direccion: String
+  --
+  + registrarTramite()
+  + consultarEstado()
+  + entregarDocumentos()
+}
+
+class Tecnico {
+  + id: String
+  + nombres: String
+  + perfil: PerfilTecnico
+  + especialidad: String
+  + email: String
+  + estado: String
+  + carga_trabajo: Integer
+  --
+  + gestionarFase()
+  + elaborarInforme()
+  + solicitarInformacion()
+  + cargarEntregables()
+}
+
+class Fase {
+  + id: String
+  + tramite_id: String
+  + nombre: String
+  + numero_orden: Integer
+  + perfil_requerido: PerfilTecnico
+  + estado: EstadoFase
+  + fecha_inicio: DateTime
+  + fecha_fin: DateTime
+  + tiempo_duracion: Integer
+  + tecnico_id: String
+  --
+  + iniciar()
+  + pausar()
+  + completar()
+  + asignarTecnico()
+}
+
+class Documento {
+  + id: String
+  + tramite_id: String
+  + fase_id: String
+  + nombre: String
+  + tipo: TipoDocumento
+  + url_archivo: String
+  + fecha_carga: DateTime
+  + cargado_por: String
+  + tamaño: Integer
+  --
+  + subir()
+  + descargar()
+  + eliminar()
+  + versionar()
+}
+
+class Notificacion {
+  + id: String
+  + tramite_id: String
+  + destinatario_id: String
+  + tipo: TipoNotificacion
+  + canal: CanalNotificacion
+  + mensaje: Text
+  + fecha_envio: DateTime
+  + estado: String
+  --
+  + enviar()
+  + marcarLeida()
+}
+
+class Derivacion {
+  + id: String
+  + tramite_id: String
+  + fase_id: String
+  + motivo: Text
+  + entidad_destino: String
+  + fecha_solicitud: DateTime
+  + fecha_respuesta: DateTime
+  + estado: String
+  --
+  + solicitar()
+  + procesar()
+  + responder()
+}
+
+class SolicitudInformacion {
+  + id: String
+  + tramite_id: String
+  + fase_id: String
+  + documentos_solicitados: Text
+  + fecha_solicitud: DateTime
+  + fecha_entrega: DateTime
+  + estado: String
+  --
+  + crear()
+  + registrarEntrega()
+  + cancelar()
+}
+
+class ExpedienteDigital {
+  + id: String
+  + tramite_id: String
+  + url_carpeta_drive: String
+  + documentos_count: Integer
+  + tamaño_total: Integer
+  --
+  + crear()
+  + agregarDocumento()
+  + generarPDF()
+}
+
+enum TipoTramite {
+  TRAZADO_VIAL
+  CERTIFICACION_VIAL
+  REPLANTEO_VIAL
+  SECCION_TRANSVERSAL
+  COLOCACION_EJE
+  COLOCACION_INFRAESTRUCTURA
+  DECLARATORIA_CAMINO
+}
+
+enum EstadoTramite {
+  REGISTRADO
+  EN_PROCESO
+  SOLICITUD_INFORMACION
+  EN_DERIVACION
+  FINALIZADO
+  RECHAZADO
+}
+
+enum PerfilTecnico {
+  ING_GEOGRAFO
+  ARQUITECTO
+  TOPOGRAFO
+  ING_CIVIL
+}
+
+enum EstadoFase {
+  PENDIENTE
+  EN_CURSO
+  PAUSADA
+  COMPLETADA
+}
+
+' Relaciones
+Tramite "1" *-- "1..*" Fase : contiene
+Tramite "1" -- "1" Ciudadano : solicitado por
+Tramite "1" -- "0..*" Tecnico : asignado a
+Tramite "1" *-- "0..*" Documento : tiene
+Tramite "1" *-- "0..*" Notificacion : genera
+Tramite "1" o-- "0..*" Derivacion : puede tener
+Tramite "1" o-- "0..*" SolicitudInformacion : puede tener
+Tramite "1" -- "1" ExpedienteDigital : tiene
+
+Fase "1" -- "1" Tecnico : asignada a
+Fase "1" *-- "0..*" Documento : genera
+
+Documento "0..*" -- "1" ExpedienteDigital : almacenado en
+
 @enduml`
 };
 
