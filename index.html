@@ -875,7 +875,12 @@
     <script src="script.js"></script>
     <!-- Librería pako para compresión deflate -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
-    <script src="plantuml-simple.js?v=4"></script>
+    <script>
+        // Forzar recarga del JavaScript rompiendo cache con timestamp
+        const script = document.createElement('script');
+        script.src = 'plantuml-simple.js?v=' + new Date().getTime();
+        document.head.appendChild(script);
+    </script>
 </body>
 
 </html>
