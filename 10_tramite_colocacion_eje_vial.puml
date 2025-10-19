@@ -4,81 +4,85 @@ skinparam defaultFontName Arial
 title Flujo del Trámite de Colocación de Eje Vial
 subtitle Duración total estimada: 30 días
 
-actor "Ciudadano" as Ciudadano
-actor "Ventanilla (Analista)" as Ventanilla
-participant "Herramienta" as Herramienta
-actor "Técnico Arquitecto" as TecArq
-actor "Técnico Topógrafo" as TecTopo
-actor "Supervisor" as Supervisor
-database "Expediente Digital" as BD
+start
 
-== FASE 1: COMPETENCIA (3 días) ==
-note over TecArq
-  Responsables: Irene, Carla, Nicole, 
-  Santiago, Evelyn
-end note
+group REGISTRO DE TRÁMITE Y ASIGNACIÓN
+  :Ciudadano entrega solicitud y requisitos;
+  :Ventanilla registra trámite;
+  :Herramienta asigna fase de competencia;
+end group
 
-Ciudadano -> Ventanilla : Entrega solicitud y requisitos
-Ventanilla -> Herramienta : Registrar trámite
-Herramienta -> TecArq : Asignar fase de competencia
-TecArq -> TecArq : Verificar competencia
+group FASE 1: COMPETENCIA (3 días)
+  partition "Técnico Arquitecto
+(Irene, Carla, Nicole, Santiago, Evelyn)" as TecArq {
+    :Verificar competencia;
+    if (Es competente?) then (Sí)
+      :Revisar requisitos completos;
+      if (Requisitos completos?) then (Sí)
+        :Continuar a siguiente fase;
+      else (No)
+        :Solicitar información al ciudadano;
+        :Ventanilla registra información;
+      end if
+    else (No)
+      :Elaborar respuesta de no competencia;
+      :Supervisor revisa respuesta;
+      :Revisar y firmar director (Supervisor);
+      :Guardar respuesta en BD;
+      :Notificar no competencia al ciudadano;
+    end if
+  }
+end group
 
-alt Es competente
-  TecArq -> TecArq : Revisar requisitos completos
-  alt Requisitos completos
-    TecArq -> Herramienta : Continuar a siguiente fase
-  else Requisitos incompletos
-    TecArq -> Herramienta : Solicitar información
-    Herramienta -> Ciudadano : Notificar solicitud
-    Ciudadano -> Ventanilla : Entregar información
-    Ventanilla -> Herramienta : Registrar información
-  end
-else No es competente
-  TecArq -> Herramienta : Elaborar respuesta de no competencia
-  Herramienta -> Supervisor : Revisar respuesta
-  Supervisor -> Supervisor : Revisar y firmar director
-  Herramienta -> BD : Guardar respuesta
-  Herramienta -> Ciudadano : Notificar no competencia
-end
+group FASE 2: VERIFICACIÓN DE APROBACIÓN (4 días)
+  partition "Técnico Arquitecto
+(Irene, Carla, Nicole, Santiago, Evelyn)" as TecArq {
+    :Asignar fase de verificación;
+    :Revisar aprobación de la vía;
+    if (Información completa?) then (Sí)
+      :Continuar a siguiente fase;
+    else (No)
+      :Solicitar información al ciudadano;
+    end if
+    :Guardar verificación en BD;
+  }
+end group
 
-== FASE 2: VERIFICACIÓN DE APROBACIÓN (4 días) ==
-Herramienta -> TecArq : Asignar fase de verificación
-TecArq -> TecArq : Revisar aprobación de la vía
+group FASE 3: DETERMINACIÓN COORDENADAS EJE (4 días)
+  partition "Técnico Arquitecto
+(Irene, Carla, Nicole, Santiago, Evelyn)" as TecArq {
+    :Elaborar informe previo de colocación;
+    :Supervisor revisa informe previo;
+    :Revisar coordinación (Supervisor);
+    :Guardar informe previo en BD;
+  }
+end group
 
-alt Información completa
-  TecArq -> Herramienta : Continuar a siguiente fase
-else Requiere información
-  TecArq -> Herramienta : Solicitar información
-  Herramienta -> Ciudadano : Notificar solicitud
-end
+group FASE 4: TRABAJO EN TERRITORIO (7 días)
+  partition "Técnico Topógrafo
+(Edison, Jairo)" as TecTopo {
+    :Asignar colocación física;
+    :Colocación del eje vial;
+    :Registrar colocación en BD;
+  }
+end group
 
-Herramienta -> BD : Guardar verificación
+group FASE 5: INFORME DE COLOCACIÓN (12 días)
+  partition "Técnico Topógrafo
+(Edison, Jairo)" as TecTopo {
+    :Elaborar informe de colocación de eje vial;
+    :Supervisor revisa informe;
+    :Revisar coordinación (Supervisor);
+    :Elaborar oficios de respuesta;
+    :Revisar y firmar director (Supervisor);
+    :Guardar informe final en BD;
+    :Enviar oficio al usuario;
+    :Notificar cierre al Técnico Topógrafo;
+    :Informe final al Supervisor;
+  }
+end group
 
-== FASE 3: DETERMINACIÓN COORDENADAS EJE (4 días) ==
-TecArq -> Herramienta : Elaborar informe previo de colocación
-Herramienta -> Supervisor : Revisar informe previo
-Supervisor -> Supervisor : Revisar coordinación
-Herramienta -> BD : Guardar informe previo
-
-== FASE 4: TRABAJO EN TERRITORIO (7 días) ==
-note over TecTopo
-  Responsables: Edison, Jairo
-end note
-
-Herramienta -> TecTopo : Asignar colocación física
-TecTopo -> TecTopo : Colocación del eje vial
-Herramienta -> BD : Registrar colocación
-
-== FASE 5: INFORME DE COLOCACIÓN (12 días) ==
-TecTopo -> Herramienta : Elaborar informe de colocación de eje vial
-Herramienta -> Supervisor : Revisar informe
-Supervisor -> Supervisor : Revisar coordinación
-TecTopo -> Herramienta : Elaborar oficios de respuesta
-Supervisor -> Supervisor : Revisar y firma director
-Herramienta -> BD : Guardar informe final
-Herramienta -> Ciudadano : Enviar oficio al usuario
-Herramienta -> TecTopo : Notificar cierre
-Herramienta -> Supervisor : Informe final
+stop
 
 @enduml
 

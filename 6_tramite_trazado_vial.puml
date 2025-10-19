@@ -4,116 +4,113 @@ skinparam defaultFontName Arial
 title Flujo del Trámite de Trazado Vial
 subtitle Duración total estimada: 162 días
 
-actor "Ciudadano" as Ciudadano
-actor "Ventanilla (Analista)" as Ventanilla
-participant "Herramienta" as Herramienta
-actor "Técnico Geógrafo" as TecGeo
-actor "Técnico Arquitecto" as TecArq
-actor "Técnico Topógrafo" as TecTopo
-actor "Técnico Ing. Civil" as TecCivil
-actor "Supervisor" as Supervisor
-database "Expediente Digital" as BD
+start
 
-== FASE 1: COMPETENCIA (8 días) ==
-note over TecGeo
-  Responsables: Katy, Alicia, Fernanda
-end note
+group REGISTRO DE TRÁMITE Y ASIGNACIÓN
+  :Ciudadano entrega solicitud y requisitos;
+  :Ventanilla registra trámite;
+  :Herramienta asigna fase de competencia;
+end group
 
-Ciudadano -> Ventanilla : Entrega solicitud y requisitos
-Ventanilla -> Herramienta : Registrar trámite
-Herramienta -> TecGeo : Asignar fase de competencia
-TecGeo -> TecGeo : Verificar competencia
+group FASE 1: COMPETENCIA (8 días)
+  partition "Técnico Geógrafo
+(Katy, Alicia, Fernanda)" as TecGeo {
+    :Verificar competencia;
+    if (Es competente?) then (Sí)
+      :Revisar requisitos completos;
+      if (Requisitos completos?) then (Sí)
+        :Elaborar mapa de competencia;
+        :Guardar mapa en BD;
+      else (No)
+        :Solicitar información al ciudadano;
+        :Ventanilla registra información;
+      end if
+    else (No)
+      :Elaborar informe de no competencia;
+      :Supervisor revisa informe;
+      :Aprobar y finalizar en BD;
+      :Notificar no competencia al ciudadano;
+    end if
+  }
+end group
 
-alt Es competente
-  TecGeo -> TecGeo : Revisar requisitos completos
-  alt Requisitos completos
-    TecGeo -> Herramienta : Elaborar mapa de competencia
-    Herramienta -> BD : Guardar mapa
-  else Requisitos incompletos
-    TecGeo -> Herramienta : Solicitar información
-    Herramienta -> Ciudadano : Notificar solicitud
-    Ciudadano -> Ventanilla : Entregar información
-    Ventanilla -> Herramienta : Registrar información
-  end
-else No es competente
-  TecGeo -> Herramienta : Elaborar informe de no competencia
-  Herramienta -> Supervisor : Revisar informe
-  Supervisor -> BD : Aprobar y finalizar
-  Herramienta -> Ciudadano : Notificar no competencia
-end
+group FASE 2: INFORME DE PERTINENCIA (25 días)
+  partition "Técnico Arquitecto
+(Irene, Carla, Nicole, Santiago, Evelyn, Marcelo)" as TecArq {
+    :Asignar fase de pertinencia;
+    :Analizar pertinencia;
+    if (Requiere información?) then (Sí)
+      :Solicitar información a terceros;
+      :Recibir información;
+    end if
+    if (Es pertinente?) then (Sí)
+      :Elaborar informe de pertinencia;
+      :Elaborar mapa de pertinencia;
+      :Supervisor revisa documentos;
+      :Aprobar fase en BD;
+    else (No)
+      :Elaborar informe de no pertinencia;
+      :Supervisor revisa y aprueba;
+      :Finalizar trámite en BD;
+      :Notificar resultado al ciudadano;
+    end if
+  }
+end group
 
-== FASE 2: INFORME DE PERTINENCIA (25 días) ==
-note over TecArq
-  Responsables: Irene, Carla, Nicole, 
-  Santiago, Evelyn, Marcelo
-end note
+group FASE 3: TOPOGRAFÍA (67 días)
+  partition "Técnico Topógrafo
+(Edison, Jairo)" as TecTopo {
+    :Asignar fase de topografía;
+    :Revisar información;
+    if (Cuenta con topografía?) then (Sí)
+      :Validar topografía;
+    else (No)
+      :Inspección de la vía;
+      :Posicionamiento puntos GPS;
+      :Levantamiento topográfico;
+    end if
+    :Elaborar informe topográfico y dibujo;
+    :Supervisor revisa informe;
+    :Aprobar fase en BD;
+  }
+end group
 
-Herramienta -> TecArq : Asignar fase de pertinencia
-TecArq -> TecArq : Analizar pertinencia
+group FASE 4: DISEÑO GEOMÉTRICO (30 días)
+  partition "Técnico Ing. Civil
+(Cristian, Romario, Cristina)" as TecCivil {
+    :Asignar fase de diseño;
+    :Elaborar diseño geométrico;
+    :Elaborar informe y planos;
+    :Supervisor revisa diseño;
+    :Aprobar fase en BD;
+  }
+end group
 
-alt Requiere información
-  TecArq -> Herramienta : Solicitar información a terceros
-  Herramienta -> TecArq : Recibir información
-end
+group FASE 5: INFORME DE TRAZADO VIAL (7 días)
+  partition "Técnico Ing. Civil
+(Cristian, Romario, Cristina)" as TecCivil {
+    :Elaborar informe de trazado vial;
+    :Cargar informe;
+    :Supervisor revisa informe;
+    :Aprobar fase en BD;
+  }
+end group
 
-alt Es pertinente
-  TecArq -> Herramienta : Elaborar informe de pertinencia
-  TecArq -> Herramienta : Elaborar mapa de pertinencia
-  Herramienta -> Supervisor : Revisar documentos
-  Supervisor -> BD : Aprobar fase
-else No es pertinente
-  TecArq -> Herramienta : Elaborar informe de no pertinencia
-  Herramienta -> Supervisor : Revisar y aprobar
-  Supervisor -> BD : Finalizar trámite
-  Herramienta -> Ciudadano : Notificar resultado
-end
+group FASE 6: RESOLUCIONES Y OFICIOS (25 días)
+  partition "Técnico Ing. Civil
+(Cristian, Romario, Cristina)" as TecCivil {
+    :Elaborar resolución;
+    :Revisión técnica previa (Supervisor);
+    :Revisión coordinación (Supervisor);
+    :Revisión y firma director (Supervisor);
+    :Guardar resolución final en BD;
+    :Enviar resolución al ciudadano;
+    :Notificar cierre al Técnico Ing. Civil;
+    :Informe final al Supervisor;
+  }
+end group
 
-== FASE 3: TOPOGRAFÍA (67 días) ==
-note over TecTopo
-  Responsables: Edison, Jairo
-end note
-
-Herramienta -> TecTopo : Asignar fase de topografía
-TecTopo -> TecTopo : Revisar información
-
-alt Cuenta con topografía
-  TecTopo -> TecTopo : Validar topografía
-else No cuenta con topografía
-  TecTopo -> TecTopo : Inspección de la vía
-  TecTopo -> TecTopo : Posicionamiento puntos GPS
-  TecTopo -> TecTopo : Levantamiento topográfico
-end
-
-TecTopo -> Herramienta : Elaborar informe topográfico y dibujo
-Herramienta -> Supervisor : Revisar informe
-Supervisor -> BD : Aprobar fase
-
-== FASE 4: DISEÑO GEOMÉTRICO (30 días) ==
-note over TecCivil
-  Responsables: Cristian, Romario, Cristina
-end note
-
-Herramienta -> TecCivil : Asignar fase de diseño
-TecCivil -> TecCivil : Elaborar diseño geométrico
-TecCivil -> Herramienta : Elaborar informe y planos
-Herramienta -> Supervisor : Revisar diseño
-Supervisor -> BD : Aprobar fase
-
-== FASE 5: INFORME DE TRAZADO VIAL (7 días) ==
-TecCivil -> TecCivil : Elaborar informe de trazado vial
-TecCivil -> Herramienta : Cargar informe
-Herramienta -> Supervisor : Revisar informe
-Supervisor -> BD : Aprobar fase
-
-== FASE 6: RESOLUCIONES Y OFICIOS (25 días) ==
-TecCivil -> Herramienta : Elaborar resolución
-Herramienta -> Supervisor : Revisión técnica previa
-Supervisor -> Supervisor : Revisión coordinación
-Supervisor -> Supervisor : Revisión y firma director
-Herramienta -> BD : Guardar resolución final
-Herramienta -> Ciudadano : Enviar resolución
-Herramienta -> TecCivil : Notificar cierre
-Herramienta -> Supervisor : Informe final
+stop
 
 @enduml
 

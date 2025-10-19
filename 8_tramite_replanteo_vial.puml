@@ -4,75 +4,70 @@ skinparam defaultFontName Arial
 title Flujo del Trámite de Replanteo Vial
 subtitle Duración total estimada: 30 días
 
-actor "Ciudadano" as Ciudadano
-actor "Ventanilla (Analista)" as Ventanilla
-participant "Herramienta" as Herramienta
-actor "Técnico Arquitecto" as TecArq
-actor "Técnico Geógrafo" as TecGeo
-actor "Supervisor" as Supervisor
-database "Expediente Digital" as BD
+start
 
-== FASE 1: COMPETENCIA (4 días) ==
-note over TecArq
-  Responsables: Arquitectos + Geógrafo
-end note
+group REGISTRO DE TRÁMITE Y ASIGNACIÓN
+  :Ciudadano entrega solicitud y requisitos;
+  :Ventanilla registra trámite;
+  :Herramienta asigna fase de competencia;
+end group
 
-Ciudadano -> Ventanilla : Entrega solicitud y requisitos
-Ventanilla -> Herramienta : Registrar trámite
-Herramienta -> TecArq : Asignar fase de competencia
-TecArq -> TecArq : Verificar competencia
+group FASE 1: COMPETENCIA (4 días)
+  partition "Técnico Arquitecto
+(Arquitectos + Geógrafo)" as TecArq {
+    :Verificar competencia;
+    if (Es competente?) then (Sí)
+      :Revisar requisitos completos;
+      if (Requisitos completos?) then (Sí)
+        :Continuar a siguiente fase;
+      else (No)
+        :Solicitar información al ciudadano;
+        :Ventanilla registra información;
+      end if
+    else (No)
+      :Elaborar respuesta de no competencia;
+      :Supervisor revisa respuesta;
+      :Revisar y firmar director (Supervisor);
+      :Guardar respuesta en BD;
+      :Notificar no competencia al ciudadano;
+    end if
+  }
+end group
 
-alt Es competente
-  TecArq -> TecArq : Revisar requisitos completos
-  alt Requisitos completos
-    TecArq -> Herramienta : Continuar a siguiente fase
-  else Requisitos incompletos
-    TecArq -> Herramienta : Solicitar información
-    Herramienta -> Ciudadano : Notificar solicitud
-    Ciudadano -> Ventanilla : Entregar información
-    Ventanilla -> Herramienta : Registrar información
-  end
-else No es competente
-  TecArq -> Herramienta : Elaborar respuesta de no competencia
-  Herramienta -> Supervisor : Revisar respuesta
-  Supervisor -> Supervisor : Revisar y firmar director
-  Herramienta -> BD : Guardar respuesta
-  Herramienta -> Ciudadano : Notificar no competencia
-end
+group FASE 2: VERIFICACIÓN DE APROBACIÓN (6 días)
+  partition "Técnico Arquitecto
+(Irene, Carla, Nicole, Santiago, Evelyn, Marcelo)" as TecArq {
+    :Asignar fase de verificación;
+    :Verificar información;
+    if (Existen planos por digitalizar?) then (Sí)
+      :Digitalización de planos escaneados;
+    end if
+    :Analizar y verificar pertinencia;
+    :Verificar vías aprobadas;
+    if (Requiere inspección?) then (Sí)
+      :Inspección en territorio;
+    end if
+    :Guardar verificación en BD;
+  }
+end group
 
-== FASE 2: VERIFICACIÓN DE APROBACIÓN (6 días) ==
-Herramienta -> TecArq : Asignar fase de verificación
-TecArq -> TecArq : Verificar información
+group FASE 3: INFORME DE REPLANTEO (17 días)
+  partition "Técnico Geógrafo
+(Irene, Carla, Nicole, Santiago, Evelyn, Marcelo)" as TecGeo {
+    :Asignar elaboración de informe;
+    :Elaborar informe de replanteo vial;
+    :Supervisor revisa informe;
+    :Revisar coordinación (Supervisor);
+    :Elaborar oficio para usuario;
+    :Revisar y firmar director (Supervisor);
+    :Guardar informe final en BD;
+    :Enviar respuesta de replanteo vial al ciudadano;
+    :Notificar cierre al Técnico Geógrafo;
+    :Informe final al Supervisor;
+  }
+end group
 
-alt Existen planos por digitalizar
-  TecArq -> TecArq : Digitalización de planos escaneados
-end
-
-TecArq -> TecArq : Analizar y verificar pertinencia
-TecArq -> TecArq : Verificar vías aprobadas
-
-alt Requiere inspección
-  TecArq -> TecArq : Inspección en territorio
-end
-
-Herramienta -> BD : Guardar verificación
-
-== FASE 3: INFORME DE REPLANTEO (17 días) ==
-note over TecGeo
-  Responsables: Irene, Carla, Nicole, 
-  Santiago, Evelyn, Marcelo
-end note
-
-Herramienta -> TecGeo : Asignar elaboración de informe
-TecGeo -> Herramienta : Elaborar informe de replanteo vial
-Herramienta -> Supervisor : Revisar informe
-Supervisor -> Supervisor : Revisar coordinación
-TecGeo -> Herramienta : Elaborar oficio para usuario
-Supervisor -> Supervisor : Revisar y firma director
-Herramienta -> BD : Guardar informe final
-Herramienta -> Ciudadano : Enviar respuesta de replanteo vial
-Herramienta -> TecGeo : Notificar cierre
-Herramienta -> Supervisor : Informe final
+stop
 
 @enduml
 

@@ -4,61 +4,70 @@ skinparam defaultFontName Arial
 title Flujo del Trámite de Secciones Transversales
 subtitle Duración total estimada: 30 días
 
-actor "Ciudadano" as Ciudadano
-actor "Ventanilla (Analista)" as Ventanilla
-participant "Herramienta" as Herramienta
-actor "Técnico Geógrafo" as TecGeo
-actor "Supervisor" as Supervisor
-database "Expediente Digital" as BD
+start
 
-== FASE 1: COMPETENCIA (8 días) ==
-note over TecGeo
-  Responsables: Katty, Alicia, Fernanda, Marcelo
-end note
+group REGISTRO DE TRÁMITE Y ASIGNACIÓN
+  :Ciudadano entrega solicitud y requisitos;
+  :Ventanilla registra trámite;
+  :Herramienta asigna fase de competencia;
+end group
 
-Ciudadano -> Ventanilla : Entrega solicitud y requisitos
-Ventanilla -> Herramienta : Registrar trámite
-Herramienta -> TecGeo : Asignar fase de competencia
-TecGeo -> TecGeo : Verificar competencia
+group FASE 1: COMPETENCIA (8 días)
+  partition "Técnico Geógrafo
+(Katty, Alicia, Fernanda, Marcelo)" as TecGeo {
+    :Verificar competencia;
+    if (Es competente?) then (Sí)
+      :Revisar requisitos completos;
+      if (Requisitos completos?) then (Sí)
+        :Elaborar mapa de competencia;
+        :Guardar mapa en BD;
+      else (No)
+        :Solicitar información al ciudadano;
+        :Ventanilla registra información;
+      end if
+    else (No)
+      :Elaborar informe de no competencia;
+      :Supervisor revisa informe;
+      :Revisar y firmar director (Supervisor);
+      :Guardar respuesta en BD;
+      :Notificar no competencia al ciudadano;
+    end if
+  }
+end group
 
-alt Es competente
-  TecGeo -> TecGeo : Revisar requisitos completos
-  alt Requisitos completos
-    TecGeo -> Herramienta : Elaborar mapa de competencia
-    Herramienta -> BD : Guardar mapa
-  else Requisitos incompletos
-    TecGeo -> Herramienta : Solicitar información
-    Herramienta -> Ciudadano : Notificar solicitud
-    Ciudadano -> Ventanilla : Entregar información
-    Ventanilla -> Herramienta : Registrar información
-  end
-else No es competente
-  TecGeo -> Herramienta : Elaborar informe de no competencia
-  Herramienta -> Supervisor : Revisar informe
-  Supervisor -> Supervisor : Revisar y firmar director
-  Herramienta -> BD : Guardar respuesta
-  Herramienta -> Ciudadano : Notificar no competencia
-end
+group FASE 2: VERIFICACIÓN DE APROBACIÓN (2 días)
+  partition "Técnico Geógrafo
+(Katty, Alicia, Fernanda, Marcelo)" as TecGeo {
+    :Asignar fase de verificación;
+    :Verificar información de aprobaciones viales;
+    :Guardar verificación en BD;
+  }
+end group
 
-== FASE 2: VERIFICACIÓN DE APROBACIÓN (2 días) ==
-Herramienta -> TecGeo : Asignar fase de verificación
-TecGeo -> TecGeo : Verificar información de aprobaciones viales
-Herramienta -> BD : Guardar verificación
+group FASE 3: INSPECCIÓN (2 días)
+  partition "Técnico Geógrafo
+(Katty, Alicia, Fernanda, Marcelo)" as TecGeo {
+    :Inspección en territorio;
+    :Registrar inspección en BD;
+  }
+end group
 
-== FASE 3: INSPECCIÓN (2 días) ==
-TecGeo -> TecGeo : Inspección en territorio
-Herramienta -> BD : Registrar inspección
+group FASE 4: INFORME DE SECCIÓN (18 días)
+  partition "Técnico Geógrafo
+(Katty, Alicia, Fernanda, Marcelo)" as TecGeo {
+    :Elaborar informe de sección transversal;
+    :Supervisor revisa informe;
+    :Revisar coordinación (Supervisor);
+    :Elaborar oficio de respuesta;
+    :Revisar y firmar director (Supervisor);
+    :Guardar informe final en BD;
+    :Enviar informe de secciones transversales al ciudadano;
+    :Notificar cierre al Técnico Geógrafo;
+    :Informe final al Supervisor;
+  }
+end group
 
-== FASE 4: INFORME DE SECCIÓN (18 días) ==
-TecGeo -> Herramienta : Elaborar informe de sección transversal
-Herramienta -> Supervisor : Revisar informe
-Supervisor -> Supervisor : Revisar coordinación
-TecGeo -> Herramienta : Elaborar oficio de respuesta
-Supervisor -> Supervisor : Revisar y firma director
-Herramienta -> BD : Guardar informe final
-Herramienta -> Ciudadano : Enviar informe de secciones transversales
-Herramienta -> TecGeo : Notificar cierre
-Herramienta -> Supervisor : Informe final
+stop
 
 @enduml
 
