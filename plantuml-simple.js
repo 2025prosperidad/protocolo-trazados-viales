@@ -204,31 +204,144 @@ database "Expediente Digital" as BD
 == INICIO: DETECCIÓN DE INFORMACIÓN FALTANTE ==
 
 Tecnico -> Tecnico : Revisar documentación en fase actual
+note right of Tecnico
+  El técnico identifica que falta:
+  - Documentos específicos
+  - Información complementaria
+  - Corrección de datos
+  - Aclaración de inconsistencias
+end note
+
 Tecnico -> Herramienta : Solicitar información o documentación al ciudadano
+note over Herramienta
+  El técnico especifica:
+  - Lista de documentos requeridos
+  - Información específica solicitada
+  - Formato de entrega
+  - Observaciones y justificación
+  - Plazo para entrega
+end note
 
 == CAMBIO DE ESTADO Y NOTIFICACIÓN ==
 
 Herramienta -> BD : Cambiar estado del trámite a "Solicitud de Información"
+note right of BD
+  Se registra:
+  - Timestamp de solicitud
+  - Fase desde la que se solicita
+  - Detalle de información requerida
+  - Pausa del contador de tiempo
+end note
+
 Herramienta -> Ciudadano : Notificar solicitud de información
-Herramienta -> Supervisor : Notificar pausa del trámite
+note right of Ciudadano
+  El ciudadano recibe notificación con:
+  - Lista detallada de lo solicitado
+  - Instrucciones de entrega
+  - Plazo máximo de entrega
+  - Enlace al portal (si aplica)
+  - Contacto de ventanilla
+end note
+
+Herramienta -> Supervisor : Notificación Solicitud Información
+note right of Supervisor
+  El supervisor visualiza:
+  - Trámite en estado "Solicitud Info"
+  - Información solicitada
+  - Fecha de solicitud
+  - Tiempo transcurrido
+end note
 
 == RESPUESTA DEL CIUDADANO ==
 
+note over Ciudadano
+  El ciudadano prepara la documentación
+  o información solicitada y procede
+  a entregarla
+end note
+
 Ciudadano -> Ventanilla : Entregar información solicitada
+note right of Ciudadano
+  El ciudadano puede entregar:
+  - Presencialmente en ventanilla
+  - A través de la plataforma
+  - Por correo electrónico
+  
+  Documentos:
+  - Físicos (escaneados)
+  - Digitales
+end note
+
 Ventanilla -> Ventanilla : Verificar documentación recibida
+note right of Ventanilla
+  La ventanilla verifica:
+  - Completitud de lo solicitado
+  - Formato correcto
+  - Calidad de documentos
+  - Cumplimiento de requisitos
+end note
 
 == REGISTRO Y REACTIVACIÓN ==
 
 Ventanilla -> Herramienta : Registrar información recibida
+note over Herramienta
+  Se carga al expediente:
+  - Documentos entregados
+  - Fecha de recepción
+  - Usuario que recibió
+  - Observaciones de ventanilla
+end note
+
 Herramienta -> BD : Actualizar expediente y cambiar estado a "En Proceso"
-Herramienta -> Tecnico : Notificar recepción de información
+note right of BD
+  Se registra:
+  - Timestamp de reactivación
+  - Tiempo en solicitud de información
+  - Documentos incorporados
+  - Reanudación del contador
+end note
+
+Herramienta -> Tecnico : Notificar recepción de información por correo electrónico y WhatsApp
+note right of Tecnico
+  El técnico recibe:
+  - Notificación de reactivación
+  - Acceso a documentos nuevos
+  - Expediente actualizado
+  - Tiempo restante de gestión
+end note
+
 Herramienta -> Supervisor : Actualizar seguimiento
-Herramienta -> Ciudadano : Confirmar recepción y reactivación
+note right of Supervisor
+  Actualización incluye:
+  - Estado: "En Proceso"
+  - Tiempo en solicitud de info
+  - Documentos recibidos
+  - Nuevo plazo ajustado
+end note
+
+Herramienta -> Ciudadano : Confirmar recepción y reactivación por correo y WhatsApp
+note right of Ciudadano
+  El ciudadano recibe:
+  - Confirmación de recepción
+  - Actualización de estado
+  - Continuación del proceso
+end note
 
 == CONTINUACIÓN DEL PROCESO ==
 
 Tecnico -> Herramienta : Continuar con la gestión de la fase
+note over Tecnico
+  El técnico retoma la gestión
+  con la información completa
+  proporcionada por el ciudadano
+end note
+
 Tecnico -> Tecnico : Completar análisis técnico
+note right of Tecnico
+  Con la información completa,
+  el técnico puede finalizar
+  la fase actual
+end note
 
 @enduml`,
   'diagram-trazado-vial': String.raw`@startuml

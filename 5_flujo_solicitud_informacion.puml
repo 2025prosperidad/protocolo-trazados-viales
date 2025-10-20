@@ -73,7 +73,7 @@ Ciudadano -> Ventanilla : Entregar información solicitada
 note right of Ciudadano
   El ciudadano puede entregar:
   - Presencialmente en ventanilla
-  - A través del portal web
+  - A través de la plataforma
   - Por correo electrónico
   
   Documentos:
