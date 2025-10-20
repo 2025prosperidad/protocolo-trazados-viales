@@ -59,7 +59,7 @@ note right of Supervisor
   - Tiempo transcurrido
 end note
 
-Herramienta -> Ciudadano : Notificar pausa temporal del trámite
+Herramienta -> Ciudadano : Notificación Derivación de Trámite
 note right of Ciudadano
   El ciudadano recibe:
   - Notificación de derivación
@@ -102,7 +102,7 @@ note over Herramienta
   - Fecha de respuesta
 end note
 
-Herramienta -> BD : Cambiar estado a "En Proceso"
+Tecnico -> Herramienta : Cambiar estado a "En Proceso"
 note right of BD
   Se registra:
   - Timestamp de reactivación

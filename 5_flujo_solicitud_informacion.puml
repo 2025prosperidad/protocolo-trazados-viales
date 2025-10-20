@@ -52,7 +52,7 @@ note right of Ciudadano
   - Contacto de ventanilla
 end note
 
-Herramienta -> Supervisor : Notificar pausa del trámite
+Herramienta -> Supervisor : Notificación Solicitud Información
 note right of Supervisor
   El supervisor visualiza:
   - Trámite en estado "Solicitud Info"
@@ -110,7 +110,7 @@ note right of BD
   - Reanudación del contador
 end note
 
-Herramienta -> Tecnico : Notificar recepción de información
+Herramienta -> Tecnico : Notificar recepción de información por correo electrónico y WhatsApp
 note right of Tecnico
   El técnico recibe:
   - Notificación de reactivación
@@ -128,7 +128,7 @@ note right of Supervisor
   - Nuevo plazo ajustado
 end note
 
-Herramienta -> Ciudadano : Confirmar recepción y reactivación
+Herramienta -> Ciudadano : Confirmar recepción y reactivación por correo y WhatsApp
 note right of Ciudadano
   El ciudadano recibe:
   - Confirmación de recepción
