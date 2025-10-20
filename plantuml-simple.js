@@ -192,7 +192,7 @@ Tecnico -> Herramienta : Continuar con la gestión de la fase
   'diagram-flujo-solicitud': String.raw`@startuml
 !pragma charset UTF-8
 skinparam defaultFontName Arial
-title Flujo de Solicitud de Información al Usuario
+title Flujo de Solicitud de Información al Usuario.
 
 participant "Herramienta" as Herramienta
 actor "Técnico" as Tecnico
