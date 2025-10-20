@@ -1324,6 +1324,18 @@ function renderDiagram(code, container, filename) {
     
     <div id="links-${container.id}" class="tab-content" style="display:none">
         <div style="display:flex;flex-direction:column;gap:1rem">
+            <div style="padding:1rem;background:#ecfdf5;border:1px solid #10b981;border-radius:0.5rem">
+                <h5 style="margin-bottom:0.75rem;font-size:1rem">💾 Descargar Diagrama</h5>
+                <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+                    <button onclick="downloadDiagram('${container.id}', 'svg')" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.25rem;background:#10b981;color:white;border:none;border-radius:0.5rem;font-size:0.9375rem;font-weight:500;cursor:pointer">
+                        <span>📥</span><span>Descargar SVG</span>
+                    </button>
+                    <button onclick="downloadDiagram('${container.id}', 'png')" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.25rem;background:#059669;color:white;border:none;border-radius:0.5rem;font-size:0.9375rem;font-weight:500;cursor:pointer">
+                        <span>📥</span><span>Descargar PNG</span>
+                    </button>
+                </div>
+                <p style="margin-top:0.75rem;font-size:0.875rem;color:#047857">Descarga el diagrama en formato vectorial (SVG) o imagen (PNG)</p>
+            </div>
             <div style="padding:1rem;background:#f1f5f9;border-radius:0.5rem">
                 <h5 style="margin-bottom:0.75rem;font-size:1rem">📄 Archivo Local</h5>
                 <a href="../${filename}" target="_blank" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.25rem;background:#2563eb;color:white;text-decoration:none;border-radius:0.5rem;font-size:0.9375rem;font-weight:500">
@@ -1479,6 +1491,61 @@ window.renderAllDiagrams = function () {
       loadAndRenderDiagram(diagramId);
     }
   });
+};
+
+// Función para descargar diagramas
+window.downloadDiagram = function(containerId, format) {
+  const code = diagramCodes[containerId];
+  if (!code) {
+    alert('❌ No se pudo encontrar el código del diagrama');
+    return;
+  }
+  
+  try {
+    // Codificar el diagrama
+    const encoded = encodePlantUML(code);
+    
+    // Construir la URL según el formato
+    const baseUrl = 'https://www.plantuml.com/plantuml';
+    let downloadUrl;
+    
+    if (format === 'svg') {
+      downloadUrl = `${baseUrl}/svg/~1${encoded}`;
+    } else if (format === 'png') {
+      downloadUrl = `${baseUrl}/png/~1${encoded}`;
+    } else {
+      alert('❌ Formato no soportado');
+      return;
+    }
+    
+    // Extraer el nombre del diagrama desde el título
+    const titleMatch = code.match(/title\s+(.+)/i);
+    const diagramName = titleMatch ? titleMatch[1].trim().replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ\s]/g, '').replace(/\s+/g, '_') : containerId;
+    const fileName = `${diagramName}.${format}`;
+    
+    // Crear un elemento temporal para descargar
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = fileName;
+    link.target = '_blank';
+    
+    // Agregar al DOM temporalmente
+    document.body.appendChild(link);
+    
+    // Simular clic para descargar
+    link.click();
+    
+    // Remover del DOM
+    document.body.removeChild(link);
+    
+    // Mostrar mensaje de éxito
+    const formatName = format.toUpperCase();
+    alert(`✓ Descargando diagrama en formato ${formatName}...\n\nArchivo: ${fileName}`);
+    
+  } catch (error) {
+    console.error('Error al descargar diagrama:', error);
+    alert(`❌ Error al descargar diagrama: ${error.message}`);
+  }
 };
 
 console.log('📊 PlantUML Simple Renderer cargado');
